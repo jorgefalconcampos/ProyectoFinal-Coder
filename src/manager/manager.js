@@ -1,4 +1,3 @@
-// import fs from "fs";
 const fs = require("fs");
 
 class Manager {
@@ -21,6 +20,17 @@ class Manager {
                 console.error("\nAl parecer el archivo o directorio no existe.");
                 return [];
             }
+        }
+    }
+
+    getRecordById = async(id) => {
+        let records = await this.getRecords();
+        try {
+            const obj = records.find((record) => { return record.id === id });
+            return obj ? obj : null;
+        }
+        catch (error) {
+            console.error(`\nError al obtener producto. ${error}`);
         }
     }
 }
