@@ -10,7 +10,6 @@ class Manager {
         try {
             if (fs.existsSync(this.path) && (fs.readFileSync(this.path).length !== 0)) { 
                 const products = await fs.promises.readFile(this.path, 'utf-8');
-                console.log(products);
                 return JSON.parse(products);
             }
             else {

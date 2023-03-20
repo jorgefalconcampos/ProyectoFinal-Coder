@@ -42,9 +42,7 @@ productsRouter.get("/", validateFormat, async (req, res) => {
         limit 
             ? res.json(resp.slice(0, limit))
             : res.json(resp);
-    }).catch((err) => console.log(`Error: \n${err}`))
-
-
+    }).catch((err) => console.log(`Error: \n${err}`));
 })
 
 module.exports = {
