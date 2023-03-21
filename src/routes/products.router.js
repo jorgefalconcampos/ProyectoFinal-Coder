@@ -45,6 +45,16 @@ const validateFormat = (parameter) => {
     }
 }
 
+/* middleware que valida que el formato sea:
+    - title: string
+    - description: string
+    - code: string
+    - price: number
+    - status: boolean
+    - stock: number
+    - category: string
+
+*/
 const validateBody = (req, res, next) => {
     const { title, description, code, price, status, stock, category } = req.body;
     if (title && typeof(title) === "string" 
