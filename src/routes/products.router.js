@@ -14,15 +14,15 @@ const products = new Manager(dirPath);
     - que el queryParam limit/id tenga un valor
     - que el queryParam limit/id tenga un valor numérico válido
 */
-const validateFormat = (parameter) => {
+const validateFormatInUrl = (parameter) => {
     return (req, res, next) => {
         let parameterKey, parameterValue = ""
 
-        if (parameter === "getAll") {
+        if (parameter === "all") {
             parameterKey = "limit";
             parameterValue = req.query.limit;   
         }
-        else if (parameter === "getOne") {
+        else if (parameter === "one") {
             parameterKey = "id";
             parameterValue = req.params.pid;
         }
@@ -53,9 +53,8 @@ const validateFormat = (parameter) => {
     - status: boolean
     - stock: number
     - category: string
-
 */
-const validateBody = (req, res, next) => {
+const validateBodyForProduct = (req, res, next) => {
     const { title, description, code, price, status, stock, category } = req.body;
     if (title && typeof(title) === "string" 
         && description && typeof(description) === "string"
@@ -71,25 +70,10 @@ const validateBody = (req, res, next) => {
     }
 }
 
-productsRouter.get("/", validateFormat("getAll"), async (req, res) => {
-    const limit = req.query.limit;
-    await products.getRecords("products").then((resp) => {
-        limit 
-            ? res.json(resp.slice(0, limit))
-            : res.json(resp);
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
-
-productsRouter.get("/:pid", validateFormat("getOne"), async (req, res) => {
-    const { pid } = req.params;
-    await products.getRecordById(parseInt(pid)).then((resp) => {
-        if (resp !== null) { res.json(resp); }
-        else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
-
-productsRouter.post("/", validateBody, async (req, res) => {
-    const { title, description, code, price, status, stock, category } = req.body;
+/* método que destructura el req.body del request y crea un objeto más manejable
+para los métodos 'createRecord' y 'updateRecord', esto al trabjar con productos*/
+const createBodyForProduct = (reqBody) => {
+    const { title, description, code, price, status, stock, category } = reqBody;
     const data = {
         "title": title,
         "description": description,
@@ -99,12 +83,52 @@ productsRouter.post("/", validateBody, async (req, res) => {
         "stock": stock,
         "category": category
     }
+    return data;
+}
 
+productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
+    const limit = req.query.limit;
+    await products.getRecords("products").then((resp) => {
+        limit 
+            ? res.json(resp.slice(0, limit))
+            : res.json(resp);
+    }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+productsRouter.get("/:pid", validateFormatInUrl("one"), async (req, res) => {
+    const { pid } = req.params;
+    await products.getRecordById(parseInt(pid)).then((resp) => {
+        if (resp !== null) { res.json(resp); }
+        else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
+    }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+productsRouter.post("/", validateBodyForProduct, async (req, res) => {
+    const data = createBodyForProduct(req.body);
     await products.createRecord(data).then((resp) => {
         res.status(201).send({
             "msg": `Se creó el producto con el ID ${resp.id}`,
-            "product": resp
+            "product_data": resp
         })
+    }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+productsRouter.put("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
+
+productsRouter.put("/:pid", [validateFormatInUrl("one"), validateBodyForProduct], async (req, res) => {
+    const { pid } = req.params;
+    const data = createBodyForProduct(req.body);
+    await products.updateRecord(pid, data).then((resp) => {
+        if (resp !== false) {
+            res.status(200).send({
+                "msg": `Se actualizó el producto con el ID ${resp[1].id}`,
+                "old_product_data": resp[0],
+                "product_data": resp[1]
+            });
+        }
+        else {
+            res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`});
+        }
     }).catch((error) => console.log(`Error: \n${error}`));
 });
 
