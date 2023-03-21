@@ -5,6 +5,14 @@ class Manager {
         this.path = path;
     }
 
+    #writeFile = async (data) => {
+        try {
+            await fs.promises.writeFile(this.path, JSON.stringify(data, null, 2))
+        }
+        catch (err) { console.error(`\n${err}`); }
+
+    }
+
     getRecords = async () => {
         try {
             if (fs.existsSync(this.path) && (fs.readFileSync(this.path).length !== 0)) { 
@@ -31,6 +39,26 @@ class Manager {
         }
         catch (error) {
             console.error(`\nError al obtener producto. ${error}`);
+        }
+    }
+
+    createRecord = async(newRecord) => {
+        let records = await this.getRecords();
+
+        try {
+            let newId;
+            records.length === 0
+                ? newId = 1
+                : newId = records[records.length-1].id+1;
+            let newObj = { ...newRecord, id: newId };
+
+            records.push(newObj);
+            await this.#writeFile(records);
+
+            return newObj;
+        }
+        catch (error) {
+            console.log(`Hubo un error al agregar el producto. \n${error}`);
         }
     }
 }

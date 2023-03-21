@@ -29,19 +29,35 @@ const validateFormat = (parameter) => {
         
         if (parameterValue) {
             if (parameterValue % 1 !== 0) 
-                return res.status(400).send({"msg": `El parámetro '${parameterKey}' no es un número entero valido`});
+                return res.status(422).send({"msg": `El parámetro '${parameterKey}' no es un número entero valido`});
             else next()
         }
         else {
             // se valida que la CLAVE limit/id tenga un VALOR
             if (parameterValue === "") 
-                return res.status(400).send({"msg": "El parámetro está vacío"});  
+                return res.status(422).send({"msg": "El parámetro está vacío"});  
         
             // existe un queryParam, pero este no es limit/id
             if (Object.keys(req.query).length > 0) 
-                res.status(400).send({"msg": `El parámetro requerido '${parameterKey}' no se encuentra presente`});
+                res.status(422).send({"msg": `El parámetro requerido '${parameterKey}' no se encuentra presente`});
             else next()
         }
+    }
+}
+
+const validateBody = (req, res, next) => {
+    const { title, description, code, price, status, stock, category } = req.body;
+    if (title && typeof(title) === "string" 
+        && description && typeof(description) === "string"
+        && code && typeof(code) === "string"
+        && price && typeof(price) === "number"
+        && status && typeof(status) === "boolean"
+        && stock && typeof(stock) === "number" 
+        && category && typeof(category) === "string") {
+            next();
+        }
+    else {
+        res.status(422).send({"msg": "Los campos están incompletos o en un formato inválido."});
     }
 }
 
@@ -51,7 +67,7 @@ productsRouter.get("/", validateFormat("getAll"), async (req, res) => {
         limit 
             ? res.json(resp.slice(0, limit))
             : res.json(resp);
-    }).catch((err) => console.log(`Error: \n${err}`));
+    }).catch((error) => console.log(`Error: \n${error}`));
 });
 
 productsRouter.get("/:pid", validateFormat("getOne"), async (req, res) => {
@@ -59,7 +75,27 @@ productsRouter.get("/:pid", validateFormat("getOne"), async (req, res) => {
     await products.getRecordById(parseInt(pid)).then((resp) => {
         if (resp !== null) { res.json(resp); }
         else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
-    }).catch((err) => console.log(`Error: \n${err}`));
+    }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+productsRouter.post("/", validateBody, async (req, res) => {
+    const { title, description, code, price, status, stock, category } = req.body;
+    const data = {
+        "title": title,
+        "description": description,
+        "code": code,
+        "price": price,
+        "status": status,
+        "stock": stock,
+        "category": category
+    }
+
+    await products.createRecord(data).then((resp) => {
+        res.status(201).send({
+            "msg": `Se creó el producto con el ID ${resp.id}`,
+            "product": resp
+        })
+    }).catch((error) => console.log(`Error: \n${error}`));
 });
 
 module.exports = {
