@@ -3,13 +3,14 @@ const express = require("express");
 const cartsRouter = express.Router();
 
 const { Manager } = require("../manager/manager.js");
+const { validateFormatInUrl } = require("../utils/middleware/validations.js");
 
 const dirPath = path.join(__dirname, "../manager/files/carts.json");
 const carts = new Manager(dirPath);
 
 cartsRouter.get("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
 
-cartsRouter.get("/:cid", async (req, res) => {
+cartsRouter.get("/:cid", validateFormatInUrl("one"), async (req, res) => {
     const { cid } = req.params;
     await carts.getRecordById(cid).then((resp) => {
         if (resp !== null) { res.json(resp); }
