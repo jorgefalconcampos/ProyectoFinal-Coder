@@ -38,7 +38,7 @@ class Manager {
             const obj = records.find((record) => { return record.id === parsedId });
             return obj ? obj : null;
         }
-        catch (error) { console.error(`\nError al obtener producto. ${error}`); }
+        catch (error) { console.error(`\nError al obtener entrada. ${error}`); }
     }
 
     createRecord = async (newRecord) => {
@@ -53,7 +53,7 @@ class Manager {
             await this.#writeFile(records);
             return newObj;
         }
-        catch (error) { console.log(`Ocurrió un error al agregar el producto. \n${error}`); }
+        catch (error) { console.log(`Ocurrió un error al agregar la entrada. \n${error}`); }
     }
 
     updateRecord = async (id, updateData) => {
@@ -71,7 +71,7 @@ class Manager {
             }
             else { return false; }
         }
-        catch (error) { console.log(`Ocurrió un error al actualizar el producto. \n${error}`); }
+        catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }
     }
 
     deleteRecord = async (id) => {
@@ -85,7 +85,7 @@ class Manager {
                 const updatedList = await this.getRecords();
                 return updatedList;
             }
-            catch (error) { console.error(`\nError al eliminar producto. ${error}`); }
+            catch (error) { console.error(`\nError al eliminar entrada. ${error}`); }
         }
     }
 }
