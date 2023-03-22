@@ -33,8 +33,9 @@ class Manager {
 
     getRecordById = async (id) => {
         let records = await this.getRecords();
+        let parsedId = parseInt(id);
         try {
-            const obj = records.find((record) => { return record.id === id });
+            const obj = records.find((record) => { return record.id === parsedId });
             return obj ? obj : null;
         }
         catch (error) { console.error(`\nError al obtener producto. ${error}`); }
@@ -55,11 +56,11 @@ class Manager {
         catch (error) { console.log(`Ocurrió un error al agregar el producto. \n${error}`); }
     }
 
-    updateRecord = async (pid, updateData) => {
+    updateRecord = async (id, updateData) => {
         const records = await this.getRecords();
-        const id = parseInt(pid);
+        let parsedId = parseInt(id);
         try {
-            const isId = (element) => { return element.id === id; }
+            const isId = (element) => { return element.id === parsedId; }
             const index = records.findIndex(isId);
             if (index !== -1) {
                 let oldData = records[index];
@@ -71,6 +72,21 @@ class Manager {
             else { return false; }
         }
         catch (error) { console.log(`Ocurrió un error al actualizar el producto. \n${error}`); }
+    }
+
+    deleteRecord = async (id) => {
+        const exists = await this.getRecordById(id);
+        let parsedId = parseInt(id);
+        if (exists) {
+            let records = await this.getRecords();
+            try {
+                records = records.filter(record => record.id != parsedId);
+                await this.#writeFile(records);
+                const updatedList = await this.getRecords();
+                return updatedList;
+            }
+            catch (error) { console.error(`\nError al eliminar producto. ${error}`); }
+        }
     }
 }
 

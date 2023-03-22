@@ -97,7 +97,7 @@ productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
 
 productsRouter.get("/:pid", validateFormatInUrl("one"), async (req, res) => {
     const { pid } = req.params;
-    await products.getRecordById(parseInt(pid)).then((resp) => {
+    await products.getRecordById(pid).then((resp) => {
         if (resp !== null) { res.json(resp); }
         else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
     }).catch((error) => console.log(`Error: \n${error}`));
@@ -130,6 +130,20 @@ productsRouter.put("/:pid", [validateFormatInUrl("one"), validateBodyForProduct]
             res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`});
         }
     }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+productsRouter.delete("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
+
+productsRouter.delete("/:pid", validateFormatInUrl("one"), async (req, res) => {
+    const { pid } = req.params;
+    await products.deleteRecord(pid).then((resp) => {
+        if (resp !== false) {
+            res.status(200).send({
+                "msg": `Se eliminó el producto con el ID ${pid}`,
+                "product_data": resp
+            });
+        }
+    });
 });
 
 module.exports = {
