@@ -28,6 +28,18 @@ cartsRouter.post("/", async (req, res) => {
     }).catch((error) => console.log(`Error: \n${error}`));
 });
 
+cartsRouter.post("/:cid/product/:pid", async (req, res) => {
+    const { cid, pid } = req.params;
+
+    await carts.updateRecordInRecord(cid, pid).then((resp) => {
+        if (resp !== false) {
+            res.status(200).send(resp);
+        }
+        else if (resp === false) 
+        { res.status(404).send({"msg": `No se encontró un carrito con el ID ${cid}`}); }
+    }).catch((error) => console.log(`Error: \n${error}`));
+});
+
 module.exports = {
     cartsRouter
 }
