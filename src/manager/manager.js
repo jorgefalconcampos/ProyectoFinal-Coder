@@ -5,6 +5,7 @@ class Manager {
         this.path = path;
     }
 
+
     #writeFile = async (data) => {
         try {
             await fs.promises.writeFile(this.path, JSON.stringify(data, null, 2))
@@ -12,6 +13,7 @@ class Manager {
         catch (err) { console.error(`\n${err}`); }
 
     }
+
 
     getRecords = async () => {
         try {
@@ -31,6 +33,7 @@ class Manager {
         }
     }
 
+
     getRecordById = async (id) => {
         let records = await this.getRecords();
         let parsedId = parseInt(id);
@@ -40,6 +43,7 @@ class Manager {
         }
         catch (error) { console.error(`\nError al obtener entrada. ${error}`); }
     }
+
 
     createRecord = async (newRecord) => {
         let records = await this.getRecords();
@@ -55,6 +59,7 @@ class Manager {
         }
         catch (error) { console.log(`Ocurrió un error al agregar la entrada. \n${error}`); }
     }
+
 
     updateRecord = async (id, updateData) => {
         const records = await this.getRecords();
@@ -74,6 +79,7 @@ class Manager {
         catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }
     }
 
+
     updateMany = () => {
         return carts.map(cart => {
             if (cart.id === cartId) {
@@ -89,124 +95,6 @@ class Manager {
           });
     }
     
-    // updateRecordInRecord = async (cid, pid) => {
-    //     const cartRecords = await this.getRecords();
-    //     let parsed_cid = parseInt(cid);
-    //     let parsed_pid = parseInt(pid);
-    //     try {
-    //         cartRecords.map(cart => {
-    //             if (cart.id === parsed_cid) {
-    //                 const updatedProducts = cart.products.map(product => {
-    //                     if (product.id === parsed_pid) {
-    //                       return { ...product, quantity: product.quantity + 1 };
-    //                     }
-    //                     return product;
-    //                   });
-    //                   return { ...cart, products: updatedProducts };
-    //             }
-
-    //             return cart
-    //         });
-
-
-           
-
-         
-
-    //         // looking for the cart ID
-    //         // const isId = (element) => { return element.id === parsed_cid; }
-    //         // const index = records.findIndex(isId);
-
-    //         // // console.log(`El carrito con ID ${id} está en la posición ${index}`);
-
-    //         // if (index !== -1) {
-
-    //         //     let productsObj = records[index].products;
-
-    //         //     // console.log(typeof(productsObj));
-
-    //         //     if (productsObj.length === 0) {
-    //         //         productsObj.push({"product": pid, "quantity": 1})
-    //         //     }
-    //         //     else {
-    //         //         console.log("entra aki");
-
-    //         //         let product = productsObj.find(el => el.product === parsed_pid);
-
-    //         //         if (product !== undefined) {
-    //         //             let qtty;
-    //         //             product.quantity === 0
-    //         //                 ? qtty = 1
-    //         //                 : qtty = product.quantity+1;
-
-                        
-    //         //             let updatedProduct = { ...product, quantity: qtty };
-    //         //             // console.log(updatedProduct);
-
-
-    //         //             let updatedProductsObj = { ...productsObj, ...updatedProduct };
-    //         //             console.log(updatedProductsObj);
-
-                        
-    //         //             // let newData = { ...records, products: updatedProductsObj }
-
-    //         //             // let xd = (JSON.stringify(newData))
-
-    //         //             // console.log(JSON.parse(xd));
-
-
-
-
-    //         //             // productsObj.push(updatedProduct);
-
-    //         //             // let newRecords = { ...records, ...updatedProductsObj}
-    //         //             // console.log(newRecords);
-    //         //             // await this.#writeFile(newRecords);
-    //         //         }
-    //         //         else { 
-    //         //             // console.log(`No existe un producto con el ID ${parsed_pid} dentro del carrito con el ID ${parsed_cid}`);
-    //         //             return 101;
-    //         //         } 
-    //         //     }
-
-
-
-               
-
-                
-
-    //         //     // if (products.product) {
-    //         //     // }
-                
-    //         //     // let oldData = records[index].products;
-    //         //     // let newId;
-    //         //     // oldData.length === 0
-    //         //     //     ? newId = 1
-    //         //     //     : newId = oldData[oldData.length-1].quantity+1;
-    //         //     // console.log(newId);
-                
-    //         //     // let newData = { ...oldData, ...updateData }
-    //         //     // records.splice(index, 1, newData);
-    //         //     // await this.#writeFile(records);
-    //         //     // return [oldData, newData];
-    //         // }
-
-    //         // try {
-    //         //     let newId;
-    //         //     records.length === 0
-    //         //         ? newId = 1
-    //         //         : newId = records[records.length-1].id+1;
-    //         //     let newObj = { ...newRecord, id: newId };
-    //         //     records.push(newObj);
-    //         //     await this.#writeFile(records);
-    //         //     return newObj;
-    //         // }
-
-
-    //         // else { return false; }
-    //     }
-    //     catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }
-    // }
 
     updateRecordInRecord = async (cid, pid) => {
         let cartRecords = await this.getRecords();
@@ -215,17 +103,15 @@ class Manager {
         try {
             // el index del carrito que tiene un ID igual al que enviamos en los URL params
             const cartIndex = cartRecords.findIndex(cart => cart.id === parsed_cid);
+            console.log(cartIndex);
 
             if (cartIndex !== -1) {
-                // cuando no existe el carro
-                // let newCart = { "products": [], "id": cartRecords[cartRecords.length-1].id+1 }
-                // cartRecords.push(newCart)
-                // await this.#writeFile(cartRecords);
-
                 // el arreglo de products dentro de nuestro carrito
                 const productsArr = cartRecords[cartIndex].products;
 
                 let productIndex = 0;
+
+                // let product = {};
                 let product = {"product": parsed_pid, "quantity": 0};
 
                 let updatedProduct = {};
@@ -233,14 +119,16 @@ class Manager {
                 if (productsArr.length != 0) { 
                     // el index del producto dentro de products []             
                     productIndex = productsArr.findIndex(el => el.product === parsed_pid);
-                    // el producto en sí mismo (objeto)
-                    product = productsArr[productIndex];
+                    productIndex !== -1 
+                        // el producto en sí mismo (objeto)
+                        ? product = productsArr[productIndex]
+                        : "" // no hacer nada, debido que ya se definió en 0
                 }
 
-                // si no existe, la cantidad es 1, si ya existe, se suma en 1
                 updatedProduct = {
                     ...product,
-                    quantity: product.quantity === 0 ? 1 : product.quantity + 1
+                    // quantity: product.quantity === 0 ? 1 : product.quantity + 1
+                    quantity: product.quantity + 1
                 }
                  
 
@@ -276,134 +164,14 @@ class Manager {
                 await this.#writeFile(updatedCarts);
 
                 return updatedCart;
-
-
-
-
-
-
-
-
-
-
-
-
-            // console.log(updatedCart);
-
-            // if (updatedCart !== undefined) {
-
-
-            //     let productsInCart = updatedCart.products;
-
-            //     console.log(productsInCart);
-            
-
-            // }
-            // else { return false; }
-            // console.log(updatedCart);
-
-         
-
-            // looking for the cart ID
-            // const isId = (element) => { return element.id === parsed_cid; }
-            // const index = records.findIndex(isId);
-
-            // // console.log(`El carrito con ID ${id} está en la posición ${index}`);
-
-            // if (index !== -1) {
-
-            //     let productsObj = records[index].products;
-
-            //     // console.log(typeof(productsObj));
-
-            //     if (productsObj.length === 0) {
-            //         productsObj.push({"product": pid, "quantity": 1})
-            //     }
-            //     else {
-            //         console.log("entra aki");
-
-            //         let product = productsObj.find(el => el.product === parsed_pid);
-
-            //         if (product !== undefined) {
-            //             let qtty;
-            //             product.quantity === 0
-            //                 ? qtty = 1
-            //                 : qtty = product.quantity+1;
-
-                        
-            //             let updatedProduct = { ...product, quantity: qtty };
-            //             // console.log(updatedProduct);
-
-
-            //             let updatedProductsObj = { ...productsObj, ...updatedProduct };
-            //             console.log(updatedProductsObj);
-
-                        
-            //             // let newData = { ...records, products: updatedProductsObj }
-
-            //             // let xd = (JSON.stringify(newData))
-
-            //             // console.log(JSON.parse(xd));
-
-
-
-
-            //             // productsObj.push(updatedProduct);
-
-            //             // let newRecords = { ...records, ...updatedProductsObj}
-            //             // console.log(newRecords);
-            //             // await this.#writeFile(newRecords);
-            //         }
-            //         else { 
-            //             // console.log(`No existe un producto con el ID ${parsed_pid} dentro del carrito con el ID ${parsed_cid}`);
-            //             return 101;
-            //         } 
-            //     }
-
-
-
-               
-
-                
-
-            //     // if (products.product) {
-            //     // }
-                
-            //     // let oldData = records[index].products;
-            //     // let newId;
-            //     // oldData.length === 0
-            //     //     ? newId = 1
-            //     //     : newId = oldData[oldData.length-1].quantity+1;
-            //     // console.log(newId);
-                
-            //     // let newData = { ...oldData, ...updateData }
-            //     // records.splice(index, 1, newData);
-            //     // await this.#writeFile(records);
-            //     // return [oldData, newData];
-            // }
-
-            // try {
-            //     let newId;
-            //     records.length === 0
-            //         ? newId = 1
-            //         : newId = records[records.length-1].id+1;
-            //     let newObj = { ...newRecord, id: newId };
-            //     records.push(newObj);
-            //     await this.#writeFile(records);
-            //     return newObj;
-            // }
-
-
-            // else { return false; }
-        // }
-        // else { return false }
-        
-        }
-        else {
-            return false;
-        }
-
-        
+            }
+            else {
+                // cuando no existe el carro
+                // let newCart = { "products": [], "id": cartRecords[cartRecords.length-1].id+1 }
+                // cartRecords.push(newCart)
+                // await this.#writeFile(cartRecords);
+                return false;
+            }
         }
         catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }
     }
