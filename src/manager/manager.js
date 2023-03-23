@@ -209,7 +209,7 @@ class Manager {
     // }
 
     updateRecordInRecord = async (cid, pid) => {
-        const cartRecords = await this.getRecords();
+        let cartRecords = await this.getRecords();
         let parsed_cid = parseInt(cid);
         let parsed_pid = parseInt(pid);
         try {
@@ -217,6 +217,10 @@ class Manager {
             const cartIndex = cartRecords.findIndex(cart => cart.id === parsed_cid);
 
             if (cartIndex !== -1) {
+                // cuando no existe el carro
+                // let newCart = { "products": [], "id": cartRecords[cartRecords.length-1].id+1 }
+                // cartRecords.push(newCart)
+                // await this.#writeFile(cartRecords);
 
                 // el arreglo de products dentro de nuestro carrito
                 const productsArr = cartRecords[cartIndex].products;
@@ -251,7 +255,6 @@ class Manager {
                     ...productsArr.slice(productIndex + 1)
                 ];
 
-                console.log(updatedproductsArr);
 
                 // actualizamos la cart
                 const updatedCart = {
@@ -392,8 +395,14 @@ class Manager {
 
 
             // else { return false; }
+        // }
+        // else { return false }
+        
         }
-        else { return false }
+        else {
+            return false;
+        }
+
         
         }
         catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }

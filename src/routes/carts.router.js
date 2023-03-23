@@ -28,7 +28,19 @@ cartsRouter.post("/", async (req, res) => {
     }).catch((error) => console.log(`Error: \n${error}`));
 });
 
-cartsRouter.post("/:cid/product/:pid", async (req, res) => {
+const validateCart = (req, res, next) => {
+    carts.getRecords().then((get_resp) => {
+        if (get_resp.length === 0) {
+            let data = { products: [], id: 1 }
+            carts.createRecord(data).then((create_resp) => {
+                if (create_resp.id) { next(); }
+            });
+        }
+        else { next(); }
+    });
+}
+
+cartsRouter.post("/:cid/product/:pid", validateCart, async (req, res) => {
     const { cid, pid } = req.params;
 
     await carts.updateRecordInRecord(cid, pid).then((resp) => {
