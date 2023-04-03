@@ -20,6 +20,7 @@ const validateFormatInUrl = (parameter) => {
         }
         
         if (parameterValue) {
+            // si no es un número entero válido
             if (parameterValue % 1 !== 0) 
                 return res.status(422).send({"msg": `El parámetro '${parameterKey}' no es un número entero valido`});
             else next()

@@ -45,6 +45,10 @@ class Manager {
     }
 
 
+    /* crea una nueva entrada en el archivo correspondiente. Al momento de instanciar 
+        la clase en el router, se le pasa el path del archivo al que se va a guardar, por
+        lo tanto este método es reutilizable.
+    */
     createRecord = async (newRecord) => {
         let records = await this.getRecords();
         try {
@@ -60,7 +64,10 @@ class Manager {
         catch (error) { console.log(`Ocurrió un error al agregar la entrada. \n${error}`); }
     }
 
-
+    /* actualiza una entrada en el archivo correspondiente dado su ID. Al momento de instanciar 
+        la clase en el router, se le pasa el path del archivo al que se va a guardar, por
+        lo tanto este método es reutilizable.
+    */
     updateRecord = async (id, updateData) => {
         const records = await this.getRecords();
         let parsedId = parseInt(id);
@@ -78,24 +85,14 @@ class Manager {
         }
         catch (error) { console.log(`Ocurrió un error al actualizar la entrada. \n${error}`); }
     }
-
-
-    updateMany = () => {
-        return carts.map(cart => {
-            if (cart.id === cartId) {
-              const updatedProducts = cart.products.map(product => {
-                if (product.id === productId) {
-                  return { ...product, quantity: product.quantity + 1 };
-                }
-                return product;
-              });
-              return { ...cart, products: updatedProducts };
-            }
-            return cart;
-          });
-    }
     
-
+    /* dado el ID de un carrito y el ID de un producto, agrega o actualiza la cantidad
+        del producto dentro de dicho carrito. Funciona "de dentro hacia afuera". Primero
+        se localiza el índice del carrito, luego dentro de su arreglo de productos se 
+        localiza el producto y se actualiza su cantidad. Finalmente se actualiza el arreglo
+        de productos, conteniendo el producto con la cantidad actualizada, luego se 
+        actualiza el carrito y al final el arreglo de carritos
+    */
     updateRecordInRecord = async (cid, pid) => {
         let cartRecords = await this.getRecords();
         let parsed_cid = parseInt(cid);
