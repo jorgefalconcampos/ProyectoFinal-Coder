@@ -3,6 +3,10 @@ const { productsRouter } = require("./routes/products.router")
 const { cartsRouter } = require("./routes/carts.router")
 const app = express();
 const PORT = 8080;
+const server = require("socket.io");
+
+// configuración de handlebars
+const handlebars = require("express-handlebars");
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
