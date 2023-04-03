@@ -1,6 +1,33 @@
-<div>
-    Todo listo para trabajar con socket
+<div class="row m-3">
+  <div class="col-4 py-4">
+    <section>
+        <h1>Crear producto</h1>
+        <form id="submitForm" class="pt-2" enctype="application/x-www-form-urlencoded">
+        <div class="mb-3">
+            <label for="name" class="form-label">Producto</label>
+            <input type="text" class="form-control" id="name" name="name" required/>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Product Price</label>
+            <input type="number" min="0" class="form-control" id="price" name="price" required/>
+        </div>
+        <button type="submit" class="btn btn-primary">Crear producto</button>
+        </form>
+    </section>
+  </div>
+  <div class="col-8 py-4">
+    <section>
+        <h1>Mis productos</h1>
+        <div class="accordion" id="accordionPlaceholder">
+
+        </div>
+    </section>
+  </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/index.html"></script>
+<script src="/js/index.js"></script>
