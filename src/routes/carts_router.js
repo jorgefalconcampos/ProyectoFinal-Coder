@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const cartsRouter = express.Router();
 
-const { Manager } = require("../manager/manager.js");
+const { Manager } = require("../manager/fs_manager.js");
 const { validateFormatInUrl } = require("../utils/middleware/validations.js");
 
 const dirPath = path.join(__dirname, "../manager/files/carts.json");
