@@ -19,6 +19,8 @@ socket.on("nuevo-producto", products => {
                     ${element.description}
                     <br>
                     Precio: ${element.price}
+                    <hr>
+                    <button type="button" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         </div>
