@@ -1,16 +1,17 @@
 const { Schema, model } = require("mongoose");
 
-const collection = "carts";
+const collection = "messages";
 
 const productSchema = new Schema({
-    cartId: {
+    sender: {
         type: String,
         required: true
     },
-    products: [{
+    message: {
         type: String,
         required: true
-    }],
+    },
+   
 });
 
 const productModel = model(collection, productSchema);
