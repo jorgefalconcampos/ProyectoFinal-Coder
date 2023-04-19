@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const productsRouter = express.Router();
 
-const { Manager } = require("../manager/fs_manager.js")
+const { Manager } = require("../manager/dao/fs_manager.js")
 
 const dirPath = path.join(__dirname, "../manager/files/products.json");
 const products = new Manager(dirPath);

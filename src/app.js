@@ -1,12 +1,12 @@
 const express = require("express");
-const { productsRouter } = require("./routes/products_router")
-const { cartsRouter } = require("./routes/carts_router")
-// const { realTimeProductsRouter } = require("./routes/real_time_products")
+
 const app = express();
 const PORT = 8080;
 const { Server } = require("socket.io");
 const multer = require("multer");
 const upload = multer();
+
+const { objConfig } = require("./config/config");
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
@@ -18,11 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 
-
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-// app.use("/realtimeproducts", realTimeProductsRouter);
-
+objConfig.connectDB();
 
 app.use((err, req, res, next) => {
     console.log(err);
