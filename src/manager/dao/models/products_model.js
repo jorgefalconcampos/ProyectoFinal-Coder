@@ -1,13 +1,17 @@
 const { Schema, model } = require("mongoose");
 
-const collection = "productos";
+const collection = "products";
 
 const productSchema = new Schema({
     title: {
         type: String,
         required: true
     },
-    thumbnail: {
+    description: {
+        type: String,
+        required: true
+    },
+    code: {
         type: String,
         required: true
     },
@@ -15,10 +19,22 @@ const productSchema = new Schema({
         type: Number,
         required: true
     },
-    code: {
+    status: {
+        type: Boolean,
+        required: true
+    },
+    stock: {
+        type: Number,
+        required: true
+    },
+    category: {
         type: String,
         required: true
-    }
+    },
+    thumbnails: [{
+        type: String,
+        required: false
+    }],
 });
 
 const productModel = model(collection, productSchema);

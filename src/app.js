@@ -3,10 +3,12 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const { Server } = require("socket.io");
+const routerApp = require("./routes/index.js")
 const multer = require("multer");
 const upload = multer();
 
 const { objConfig } = require("./config/config");
+
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
@@ -58,3 +60,4 @@ app.post("/realtimeproducts", upload.any(), (req, res) => {
     socketServer.emit("nuevo-producto", products);
     res.sendStatus(200);
 });
+app.use(routerApp);

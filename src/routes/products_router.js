@@ -2,26 +2,34 @@ const path = require("path");
 const express = require("express");
 const productsRouter = express.Router();
 
-const { Manager } = require("../manager/dao/fs_manager.js")
-
-const dirPath = path.join(__dirname, "../manager/files/products.json");
-const products = new Manager(dirPath);
+// const { Manager } = require("../manager/dao/fs_manager.js")
+// const dirPath = path.join(__dirname, "../manager/files/products.json");
+// const products = new Manager(dirPath);
+const productsManager = require("../manager/dao/mongo_product_manager.js");
 
 const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
 
 
 productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
     const limit = req.query.limit;
-    await products.getRecords("products").then((resp) => {
+    // await products.getRecords("products").then((resp) => {
+    await productsManager.getAllProducts().then((resp) => {
+        // const resp_products = [];
+        // resp.forEach(product => { 
+        //     let formatted_prod = createBodyForProduct(product);
+        //     resp_products.push(formatted_prod);
+        // });
+
         limit 
             ? res.json(resp.slice(0, limit))
             : res.json(resp);
     }).catch((error) => console.log(`Error: \n${error}`));
 });
 
-productsRouter.get("/:pid", validateFormatInUrl("one"), async (req, res) => {
+productsRouter.get("/:pid", async (req, res) => {
     const { pid } = req.params;
-    await products.getRecordById(pid).then((resp) => {
+    // await products.getRecordById(pid).then((resp) => {
+    await productsManager.getProductById(pid).then((resp) => {
         if (resp !== null) { res.json(resp); }
         else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
     }).catch((error) => console.log(`Error: \n${error}`));
@@ -29,7 +37,8 @@ productsRouter.get("/:pid", validateFormatInUrl("one"), async (req, res) => {
 
 productsRouter.post("/", validateBodyForProduct, async (req, res) => {
     const data = createBodyForProduct(req.body);
-    await products.createRecord(data).then((resp) => {
+    // await products.createRecord(data).then((resp) => {
+    await productsManager.addProduct(data).then((resp) => {
         res.status(201).send({
             "msg": `Se creó el producto con el ID ${resp.id}`,
             "product_data": resp
@@ -39,15 +48,16 @@ productsRouter.post("/", validateBodyForProduct, async (req, res) => {
 
 productsRouter.put("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
 
-productsRouter.put("/:pid", [validateFormatInUrl("one"), validateBodyForProduct], async (req, res) => {
+productsRouter.put("/:pid", validateBodyForProduct, async (req, res) => {
     const { pid } = req.params;
     const data = createBodyForProduct(req.body);
-    await products.updateRecord(pid, data).then((resp) => {
+    // await products.updateRecord(pid, data).then((resp) => {
+    await productsManager.updateProduct(pid, data).then((resp) => {
+
+        console.log(resp);
         if (resp !== false) {
-            res.status(200).send({
-                "msg": `Se actualizó el producto con el ID ${resp[1].id}`,
-                "old_product_data": resp[0],
-                "product_data": resp[1]
+            res.status(200).send({ 
+                "msg": `Se actualizó el producto con el ID ${pid}`,
             });
         }
         else {
@@ -58,9 +68,10 @@ productsRouter.put("/:pid", [validateFormatInUrl("one"), validateBodyForProduct]
 
 productsRouter.delete("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
 
-productsRouter.delete("/:pid", validateFormatInUrl("one"), async (req, res) => {
+productsRouter.delete("/:pid", async (req, res) => {
     const { pid } = req.params;
-    await products.deleteRecord(pid).then((resp) => {
+    // await products.deleteRecord(pid).then((resp) => {
+    await productsManager.deleteProduct(pid).then((resp) => {
         if (resp !== false) {
             res.status(200).send({
                 "msg": `Se eliminó el producto con el ID ${pid}`,

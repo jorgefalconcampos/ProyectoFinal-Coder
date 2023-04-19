@@ -5,8 +5,8 @@ const { cartsRouter } = require("./carts_router");
 
 const router = Router();
 
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-// app.use("/realtimeproducts", realTimeProductsRouter);
+router.use("/api/products", productsRouter);
+router.use("/api/carts", cartsRouter);
+// router.use("/realtimeproducts", realTimeProductsRouter);
 
 module.exports = router;
