@@ -14,12 +14,6 @@ productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
     const limit = req.query.limit;
     // await products.getRecords("products").then((resp) => {
     await productsManager.getAllProducts().then((resp) => {
-        // const resp_products = [];
-        // resp.forEach(product => { 
-        //     let formatted_prod = createBodyForProduct(product);
-        //     resp_products.push(formatted_prod);
-        // });
-
         limit 
             ? res.json(resp.slice(0, limit))
             : res.json(resp);
@@ -28,7 +22,6 @@ productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
 
 productsRouter.get("/:pid", async (req, res) => {
     const { pid } = req.params;
-    // await products.getRecordById(pid).then((resp) => {
     await productsManager.getProductById(pid).then((resp) => {
         if (resp !== null) { res.json(resp); }
         else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
@@ -37,11 +30,9 @@ productsRouter.get("/:pid", async (req, res) => {
 
 productsRouter.post("/", validateBodyForProduct, async (req, res) => {
     const data = createBodyForProduct(req.body);
-    // await products.createRecord(data).then((resp) => {
     await productsManager.addProduct(data).then((resp) => {
         res.status(201).send({
             "msg": `Se creó el producto con el ID ${resp.id}`,
-            "product_data": resp
         })
     }).catch((error) => console.log(`Error: \n${error}`));
 });
@@ -51,10 +42,7 @@ productsRouter.put("/", async(req, res) => { res.status(404).send({"msg": "Agreg
 productsRouter.put("/:pid", validateBodyForProduct, async (req, res) => {
     const { pid } = req.params;
     const data = createBodyForProduct(req.body);
-    // await products.updateRecord(pid, data).then((resp) => {
     await productsManager.updateProduct(pid, data).then((resp) => {
-
-        console.log(resp);
         if (resp !== false) {
             res.status(200).send({ 
                 "msg": `Se actualizó el producto con el ID ${pid}`,

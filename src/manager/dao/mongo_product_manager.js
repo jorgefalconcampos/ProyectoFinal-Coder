@@ -14,7 +14,6 @@ class ProductManagerMongo {
   }
 
   async updateProduct(pid, productToUpdate) {
-    // return await productModel.updateOne({_id:pid}, { $set: {productToUpdate} })
     return await productModel.updateOne({_id: pid}, {$set: {
       title: productToUpdate.title,
       description: productToUpdate.description,
