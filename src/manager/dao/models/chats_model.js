@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const collection = "messages";
 
-const productSchema = new Schema({
-    sender: {
+const chatSchema = new Schema({
+    user: {
         type: String,
         required: true
     },
@@ -14,8 +14,8 @@ const productSchema = new Schema({
    
 });
 
-const productModel = model(collection, productSchema);
+const chatModel = model(collection, chatSchema);
 
 module.exports = {
-    productModel
+    chatModel
 }

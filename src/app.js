@@ -9,6 +9,7 @@ const upload = multer();
 
 const { objConfig } = require("./config/config");
 
+const chatManager = require("./manager/dao/mongo_chat_manager.js");
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
@@ -50,12 +51,7 @@ io.on("connection", socket => {
     });
 
     socket.on("message", objetoMensajeCliente => {
-        const obj = {
-            "socketId": socket.id,
-            ...objetoMensajeCliente
-        }
-        console.log(obj);
-
+        uploadChat(objetoMensajeCliente);
         messages.push(objetoMensajeCliente);
         io.emit("messageLogs", messages);
     });
@@ -63,6 +59,11 @@ io.on("connection", socket => {
 });
 
 
+async function uploadChat(data) {
+    await chatManager.addChat(data).then((resp) => {
+        console.log(`Se guardó el mensaje en la BDD con el ID ${resp.id}`);
+    }).catch((error) => console.log(`Error: \n${error}`));
+}
 
 
 
