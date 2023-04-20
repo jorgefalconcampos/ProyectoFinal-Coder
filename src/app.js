@@ -33,13 +33,38 @@ const httpServer = app.listen(PORT, (err) => {
     console.log(`Servidor corriendo en el puerto ${PORT} - http://localhost:${PORT}`);
 })
 
-const socketServer = new Server(httpServer);
-const products = [];
-  
+const io = new Server(httpServer);
+const messages = [];
 
-socketServer.on("connection", () => {
-    console.info("Cliente conectado");
+// socket.on("message", objetoMensajeCliente => {
+//     messages.push(objetoMensajeCliente);
+//     io.emit("messageLogs", messages);
+// });
+
+io.on("connection", socket => {
+    // console.log(`\nNuevo cliente conectado. ID: ${socket.id}`);    
+
+    socket.on("authenticated", nombreUsuario => {
+        console.log(`\nEl socket con ID '${socket.id}' se identificó como '${nombreUsuario}'`);
+        socket.broadcast.emit("newUserConnected", nombreUsuario);
+    });
+
+    socket.on("message", objetoMensajeCliente => {
+        const obj = {
+            "socketId": socket.id,
+            ...objetoMensajeCliente
+        }
+        console.log(obj);
+
+        messages.push(objetoMensajeCliente);
+        io.emit("messageLogs", messages);
+    });
+
 });
+
+
+
+
 
 // app.get("/", (req, res) => {
 //     res.json(products);
