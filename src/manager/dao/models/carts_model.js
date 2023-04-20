@@ -2,10 +2,10 @@ const { Schema, model } = require("mongoose");
 
 const collection = "carts";
 
-const productSchema = new Schema({
+const cartSchema = new Schema({
     cartId: {
         type: String,
-        required: true
+        required: false
     },
     products: [{
         type: String,
@@ -13,8 +13,8 @@ const productSchema = new Schema({
     }],
 });
 
-const productModel = model(collection, productSchema);
+const cartModel = model(collection, cartSchema);
 
 module.exports = {
-    productModel
+    cartModel
 }

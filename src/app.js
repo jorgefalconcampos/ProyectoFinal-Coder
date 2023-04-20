@@ -41,23 +41,24 @@ socketServer.on("connection", () => {
     console.info("Cliente conectado");
 });
 
-app.get("/", (req, res) => {
-    res.json(products);
-})
+// app.get("/", (req, res) => {
+//     res.json(products);
+// })
 
-app.get("/realtimeproducts", async (req, res) => {
-    socketServer.emit("nuevo-producto", products)
-    res.render("realtimeproducts")
-});
+// app.get("/realtimeproducts", async (req, res) => {
+//     socketServer.emit("nuevo-producto", products)
+//     res.render("realtimeproducts")
+// });
 
-app.post("/realtimeproducts", upload.any(), (req, res) => {
-    const product = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-    }
-    products.push(product);
-    socketServer.emit("nuevo-producto", products);
-    res.sendStatus(200);
-});
+// app.post("/realtimeproducts", upload.any(), (req, res) => {
+//     const product = {
+//         name: req.body.name,
+//         description: req.body.description,
+//         price: req.body.price,
+//     }
+//     products.push(product);
+//     socketServer.emit("nuevo-producto", products);
+//     res.sendStatus(200);
+// });
+
 app.use(routerApp);
