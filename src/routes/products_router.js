@@ -11,13 +11,32 @@ const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = re
 
 
 productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
-    const limit = req.query.limit;
-    // await products.getRecords("products").then((resp) => {
-    await productsManager.getAllProducts().then((resp) => {
-        limit 
-            ? res.json(resp.slice(0, limit))
-            : res.json(resp);
-    }).catch((error) => console.log(`Error: \n${error}`));
+    try {       
+        const { page = 1 } = req.query;
+        const {
+            docs,
+            hasPrevPage,
+            prevPage,
+            hasNextPage,
+            nextPage,
+            totalPages
+        } = await productsManager.getAllProducts({page});
+
+        if(!docs) {
+            return res.status(400).render("no_products_to_display");
+        }
+
+        res.status(200).render("products", {
+            products: docs,
+            hasPrevPage,
+            prevPage,
+            hasNextPage,
+            nextPage,
+            totalPages: Array(totalPages).fill().map((x, i) => i+1)
+        });
+    } catch (error) {
+        console.log(`Error: \n${error}`)
+    }        
 });
 
 productsRouter.get("/:pid", async (req, res) => {

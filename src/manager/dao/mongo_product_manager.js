@@ -1,8 +1,10 @@
 const { productModel } = require("./models/products_model.js");
 
 class ProductManagerMongo {
-  async getAllProducts() {
-    return await productModel.find().lean();
+  getAllProducts = async ({page}) => {
+    const resp = await productModel.paginate({}, {limit: 5, page, lean: true});
+    console.log(resp);
+    return resp;
   }
 
   async getProductById(pid) {
