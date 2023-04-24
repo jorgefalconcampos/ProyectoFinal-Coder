@@ -26,8 +26,6 @@ const validateFormatInUrl = (parameter) => {
             else next()
         }
         else {
-            console.log("llega aki");
-
             // se valida que la CLAVE limit/id tenga un VALOR
             if (parameterValue === "") 
                 return res.status(422).send({"msg": "El parámetro está vacío"});  

@@ -24,23 +24,25 @@
     <section>
       <h1>Mis productos</h1>
       {{#if products}}
+      <div class="accordion" id="productsAccordion"></div>
         {{#each products}}
-          <div class="accordion-item my-3">
+          <div class="shadow accordion-item my-3">
             <h2 class="accordion-header" id="heading-{{this.code}}">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{this.code}}" aria-expanded="true" aria-controls="collapse-{{this.code}}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{this.code}}" aria-expanded="true" aria-controls="collapse-{{this.code}}">
                 <strong>{{this.title}}</strong>: ${{this.price}}
               </button>
             </h2>
-            <div id="collapse-{{this.code}}" class="accordion-collapse collapse" aria-labelledby="heading-{{this.code}}">
+            <div id="collapse-{{this.code}}" class="accordion-collapse collapse" aria-labelledby="heading-{{this.code}}" data-bs-parent="#productsAccordion">
               <div class="accordion-body">
                 Código de producto: {{this.code}} <br />
                 <hr />
-                <button type="button" class="btn btn-primary">Ver detalle</button>
+                <a class="btn btn-primary" href="/api/products/{{this._id}}" role="button">Ver detalle</a>
                 {{!-- <button type="button" class="btn btn-danger">Eliminar</button> --}}
               </div>
             </div>
           </div>
         {{/each}}
+      </div>
       {{else}}
       <div class="alert alert-danger py-3 mt-5" role="alert">
         No  hay productos para mostrar

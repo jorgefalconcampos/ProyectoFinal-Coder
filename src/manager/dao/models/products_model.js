@@ -39,6 +39,10 @@ const productSchema = new Schema({
     }],
 });
 
+// productSchema.pre("findById", function() {
+//     this.populate("products.product")
+// });
+
 productSchema.plugin(mongoosePaginate);
 
 const productModel = model(collection, productSchema);

@@ -9,7 +9,8 @@ const router = Router();
 router.use("/api/products", productsRouter);
 router.use("/api/carts", cartsRouter);
 router.use("/chat", viewsRouter);
-router.use("/products", viewsRouter);
+// router.use("/products", viewsRouter);
+// router.use("/products-detail", viewsRouter);
 // router.use("/realtimeproducts", realTimeProductsRouter);
 
 module.exports = router;

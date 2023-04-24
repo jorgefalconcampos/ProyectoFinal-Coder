@@ -1,31 +1,58 @@
-<div class="row m-3">
-  <div class="col-4 py-4">
-    <section>
-        <h1>Crear producto</h1>
-        <form id="submitForm" class="pt-2" enctype="application/x-www-form-urlencoded">
-        <div class="mb-3">
-            <label for="name" class="form-label">Producto</label>
-            <input type="text" class="form-control" id="name" name="name" required/>
+<div class="container mt-5 py-5 pt-5 mb-5">
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="images p-3">
+              <div class="text-center p-4">
+                {{!-- <img id="main-image" src="{{product.thumbnails[0]}}" width="250"/> --}}
+              </div>
+              <div class="thumbnail text-center">
+                {{#each product.thumbnails}}
+                  <img onclick="" src="{{this}}" width="70"/>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="product p-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <a class="h5" href="javascript:history.back()" style="text-decoration:none;">
+                    <i class="bi bi-arrow-left-circle-fill"></i>
+                    <span class="ml-1">Regresar</span>
+                  </a>
+                </div>
+                <i class="fa fa-shopping-cart text-muted"></i>
+              </div>
+              <div class="mt-4 mb-3">
+                <span class="text-uppercase text-muted brand">{{product.code}}</span>
+                <span class="text-uppercase text-muted brand">| Stock: {{product.stock}}</span>
+                <h4 class="text-uppercase">{{product.title}}</h4>
+                <h4 class="text-uppercase">{{product.category}}</h4>
+                <div class="price d-flex flex-row align-items-center">
+                  <span class="">${{product.price}}</span>
+                  {{!-- <div class="ml-2">
+                    <small class="dis-price">$59</small>
+                    <span>40% OFF</span>
+                  </div> --}}
+                </div>
+              </div>
+              <p class="about">{{product.description}}</p>
+              {{! <div class="sizes mt-5">
+                                <h6 class="text-uppercase">Size</h6> <label class="radio"> <input type="radio" name="size" value="S" checked> <span>S</span> </label> <label class="radio"> <input type="radio" name="size" value="M"> <span>M</span> </label> <label class="radio"> <input type="radio" name="size" value="L"> <span>L</span> </label> <label class="radio"> <input type="radio" name="size" value="XL"> <span>XL</span> </label> <label class="radio"> <input type="radio" name="size" value="XXL"> <span>XXL</span> </label>
+                            </div> }}
+              <div class="cart mt-4 align-items-center">
+                <button class="btn btn-primary text-uppercase mr-2 px-4">Agregar al carrito</button>
+                <i class="fa fa-heart text-muted"></i>
+                <i class="fa fa-share-alt text-muted"></i>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Descripción</label>
-            <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="price" class="form-label">Product Price</label>
-            <input type="number" min="0" class="form-control" id="price" name="price" required/>
-        </div>
-        <button type="submit" class="btn btn-primary">Crear producto</button>
-        </form>
-    </section>
-  </div>
-  <div class="col-8 py-4">
-    <section>
-        <h1>Mis productos</h1>
-        <div class="accordion" id="accordionPlaceholder">
-
-        </div>
-    </section>
+      </div>
+    </div>
   </div>
 </div>
 

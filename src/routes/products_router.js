@@ -40,11 +40,21 @@ productsRouter.get("/", validateFormatInUrl("all"), async (req, res) => {
 });
 
 productsRouter.get("/:pid", async (req, res) => {
-    const { pid } = req.params;
-    await productsManager.getProductById(pid).then((resp) => {
-        if (resp !== null) { res.json(resp); }
+    try {
+        const { pid } = req.params;
+        const resp = await productsManager.getProductById(pid)
+        if (resp !== null) { 
+           
+            res.status(200).render("product_detail", {
+                product: resp
+            });
+         }
         else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
-    }).catch((error) => console.log(`Error: \n${error}`));
+        
+    } catch (error) {
+        console.log(`Error: \n${error}`);
+    }
+
 });
 
 productsRouter.post("/", validateBodyForProduct, async (req, res) => {
