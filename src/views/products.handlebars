@@ -23,7 +23,7 @@
   <div class="col-9 py-2">
     <section>
       <h1>Mis productos</h1>
-      {{#if products}}
+      {{#if status.success}}
       <div class="accordion" id="productsAccordion"></div>
         {{#each products}}
           <div class="shadow accordion-item my-3">
@@ -52,24 +52,22 @@
 
     </section>
     
-    <nav aria-label="Paginación de productos">
-        
-        
+    <nav aria-label="Paginación de productos">        
       <ul class="pagination">
         {{#if hasPrevPage}}
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Anterior">
+            <a class="page-link" href="/api/products/?page={{prevPage}}" aria-label="Anterior">
               <span aria-hidden="true">&laquo;</span>
               <span class="sr-only">Anterior</span>
             </a>
           </li>
         {{/if}}
         {{#each totalPages}}
-          <li class="page-item"><a class="page-link" href="#">{{this}}</a></li>
+          <li class="page-item"><a class="page-link" href="/api/products/?page={{this}}">{{this}}</a></li>
         {{/each}}
         {{#if hasNextPage}}
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Siguiente">
+            <a class="page-link" href="/api/products/?page={{nextPage}}" aria-label="Siguiente">
               <span aria-hidden="true">&raquo;</span>
               <span class="sr-only">Siguiente</span>
             </a>

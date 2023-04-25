@@ -1,16 +1,13 @@
-const { Mongoose, default: mongoose } = require("mongoose");
 const { productModel } = require("./models/products_model.js");
 
 class ProductManagerMongo {
-  getAllProducts = async ({page}) => {
-    const resp = await productModel.paginate({}, {limit: 5, page, lean: true});
-    // console.log(resp);
+  getAllProducts = async (query, options) => {
+    const resp = await productModel.paginate(query, options);
+    console.log(resp);
     return resp;
   }
 
   getProductById = async(pid) => {
-    // const objId = new mongoose.Types.ObjectId(pid);
-    // let cart = await cartsModel.findById({_id: "64421f2b09c17f3fb9f3695e"});
     const resp = await productModel.findOne({_id: pid}).lean();
     console.log(resp);
     return resp;
