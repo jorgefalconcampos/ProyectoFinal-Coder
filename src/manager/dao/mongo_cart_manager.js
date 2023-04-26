@@ -30,6 +30,19 @@ class CartManagerMongo {
     return await cartModel.deleteOne({pid})
   }
 
+  async updateProductFromCart(cid, pid) {
+    return await cartModel.findById(pid);
+  }
+
+  async deleteAllProductsFromCart(cid) {
+    const resp = await cartModel.findOne(cid);
+    console.log(resp);
+  }
+
+  async deleteProductFromCart(cid, pid) {
+    return await cartModel.findById(pid);
+  }
+
 
 }
 

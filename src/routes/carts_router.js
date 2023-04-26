@@ -6,7 +6,6 @@ const cartsManager = require("../manager/dao/mongo_cart_manager.js");
 
 // const { Manager } = require("../manager/dao/fs_manager.js");
 const { validateFormatInUrl } = require("../utils/middleware/validations.js");
-const { log } = require("console");
 
 // const dirPath = path.join(__dirname, "../manager/files/carts.json");
 // const carts = new Manager(dirPath);
@@ -45,6 +44,17 @@ const validateCart = (req, res, next) => {
     });
 }
 
+cartsRouter.put("/:cid", async (req, res) => {
+
+});
+
+cartsRouter.delete("/:cid", async (req, res) => {
+    const { cid } = req.query;
+    await cartsManager.deleteAllProductsFromCart(cid);
+});
+
+
+
 cartsRouter.post("/:cid/product/:pid", validateCart, async (req, res) => {
     const { cid, pid } = req.params;
     // nw
@@ -55,6 +65,16 @@ cartsRouter.post("/:cid/product/:pid", validateCart, async (req, res) => {
         else if (resp === false) 
         { res.status(404).send({"msg": `No se encontró un carrito con el ID ${cid}`}); }
     }).catch((error) => console.log(`Error: \n${error}`));
+});
+
+cartsRouter.delete("/:cid/products/:pid", async (req, res) => {
+    const { cid, pid } = req.params;
+    await cartsManager.deleteProductFromCart(cid, pid);
+});
+
+cartsRouter.put("/:cid/products/:pid", async (req, res) => {
+    const { cid, pid } = req.params;
+    await cartsManager.updateProductFromCart(cid, pid);
 });
 
 module.exports = {
