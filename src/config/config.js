@@ -11,7 +11,8 @@ const objConfig = {
         } catch (err) {
             console.log(err)
         }
-    }
+    },
+    url: "mongodb+srv://jorgexd1999:ILcVLrZ4l012WgqY@cluster0.z2wcq6e.mongodb.net/ecommerce?retryWrites=true&w=majority"
 }
 
 module.exports = {

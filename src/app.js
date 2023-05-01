@@ -6,9 +6,9 @@ const { Server } = require("socket.io");
 const routerApp = require("./routes/index.js")
 const multer = require("multer");
 const upload = multer();
-
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const { objConfig } = require("./config/config");
-
 const chatManager = require("./manager/dao/mongo_chat_manager.js");
 
 // configuración de handlebars
@@ -28,6 +28,19 @@ app.use((err, req, res, next) => {
     res.status(500).send("Ocurrió un error en el servidor.");
 });
 
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: objConfig.url,
+        mongoOptions: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        },
+        ttl: 1000000000*24,
+    }),
+    secret: "secretCoder",
+    resave: true,
+    saveUninitialized: true
+}));
 
 const httpServer = app.listen(PORT, (err) => {
     if (err) return console.log("Error al iniciar el servidor.");
