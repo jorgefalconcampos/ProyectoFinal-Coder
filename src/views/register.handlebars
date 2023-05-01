@@ -1,4 +1,4 @@
-<div>
+{{!-- <div>
     <h1>Registro</h1>
     <form action="/session/register" method="post">
         <label>Nombre de usuario</label>
@@ -11,8 +11,49 @@
         <input name="email"><br>
         <label>Password</label>
         <input type="text" name="password"><br>
-        {{!-- <label>Teléfono</label>
-        <input name="phone"><br> --}}
+        <label>Teléfono</label>
+        <input name="phone"><br>
         <input type="submit">
     </form>
+</div> --}}
+
+
+<div class="row d-flex justify-content-center">
+
+  <div class="col-7 p-5 shadow rounded">
+    <h1 class="h3 mb-5 font-weight-normal">Crea tu usuario</h1>
+
+    <form method="POST" action="/session/register">
+      <label for="inputUsername" class="mb-1">Usuario</label>
+      <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Escribe tu usuario" required="" autofocus=""/>
+      <br/>
+      <label for="inputFirstName" class="mb-1">Nombre</label>
+      <input type="text" name="first_name" id="inputFirstName" class="form-control" placeholder="Escribe tu nombre" required=""/>
+      <br/>
+      <label for="inputLastName" class="mb-1">Apellido</label>
+      <input type="text" name="last_name" id="inputLastName" class="form-control" placeholder="Escribe tu apellido" required=""/>
+      <br/>
+      <label for="inputEmail" class="mb-1">Dirección de email</label>
+      <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Escribe tu dirección de email" required=""/>
+      <br/>
+      <label for="inputPassword" class="mb-1">Contraseña</label>
+      <input type="text" name="password" id="inputPassword" class="form-control" placeholder="Escribe tu contraseña" required=""/>
+    <br/>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Crear usuario</button>
+
+
+
+      <div class="checkbox mb-3">
+        {{! <label><input type="checkbox" value="remember-me">Recordarme</label> }}
+      </div>
+      {{! <label>Username</label>
+      <input name="username" />
+      <br />
+      <label>password</label>
+      <input name="password" />
+      <input type="submit" /> }}
+    </form>
+  </div>
+
+
 </div>

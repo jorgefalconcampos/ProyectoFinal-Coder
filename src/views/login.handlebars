@@ -1,12 +1,27 @@
-<div>
-    <form method="POST" action="/session/login" >
-        <label>Username</label>
-        <input name="username">
-        <br />
-        <label>password</label>
-        <input name="password">
-        <input type="submit">
+<div class="row d-flex justify-content-center">
+
+  <div class="col-7 p-5 shadow rounded">
+    <h1 class="h3 mb-5 font-weight-normal">Inicia sesión</h1>
+
+    <form method="POST" action="/session/login" class="">
+      <label for="inputUsername" class="mb-1">Usuario</label>
+      <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Escribe tu usuario" required="" autofocus=""/>
+      <br/>
+      <label for="inputPassword" class="mb-1">Contraseña</label>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Escribe tu contraseña" required=""/>
+      <div class="checkbox mb-3">
+        {{! <label><input type="checkbox" value="remember-me">Recordarme</label> }}
+      </div>
+      {{! <label>Username</label>
+      <input name="username" />
+      <br />
+      <label>password</label>
+      <input name="password" />
+      <input type="submit" /> }}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
     </form>
-    <button onclick="getCookie()">Ver Cookie</button>
+  </div>
+
+
 </div>
-<script src="/static/js/cookieSetter.js"></script>
+{{! <script src="/static/js/cookieSetter.js"></script> }}

@@ -1,7 +1,7 @@
 const express = require("express");
 const sessionRouter = express.Router();
 
-const userModel = require('../manager/dao/models/users_model');
+const { userModel } = require('../manager/dao/models/users_model');
 
 sessionRouter.get("/login", (req, res) => {
     res.render("login", {});
@@ -9,7 +9,7 @@ sessionRouter.get("/login", (req, res) => {
 
 
 sessionRouter.post("/login", async (req, res) => {
-    const { username } = req.body;
+    const { username, password } = req.body;
 
     const user = await userModel.findOne({username});
 
@@ -81,7 +81,7 @@ sessionRouter.get("/", (req, res) => {
 sessionRouter.get("/logout", (req, res) => {
     req.session.destroy(err => {
         if (err) return res.send({status: "Logout error", message: err})
-        res.send("Logout ok");
+        res.render("logout", {});
     });
 });
 
