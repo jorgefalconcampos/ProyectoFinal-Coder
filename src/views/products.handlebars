@@ -23,8 +23,8 @@
   <div class="col-9 py-2">
     <section>
       <h1>Mis productos</h1>
-      {{#if status.success}}
-      <div class="accordion" id="productsAccordion"></div>
+      {{#if success}}
+      <div class="accordion" id="productsAccordion">
         {{#each products}}
           <div class="shadow accordion-item my-3">
             <h2 class="accordion-header" id="heading-{{this.code}}">
@@ -43,16 +43,8 @@
           </div>
         {{/each}}
       </div>
-      {{else}}
-      <div class="alert alert-danger py-3 mt-5" role="alert">
-        No  hay productos para mostrar
-        </div>
-      {{/if}}
-      
 
-    </section>
-    
-    <nav aria-label="Paginación de productos">        
+      <nav aria-label="Paginación de productos">        
       <ul class="pagination">
         {{#if hasPrevPage}}
           <li class="page-item">
@@ -75,7 +67,17 @@
         {{/if}}
 
       </ul>
-    </nav>
+      </nav>
+
+      {{else}}
+      <div class="alert alert-danger py-3 mt-5" role="alert">
+        No  hay productos para mostrar
+        </div>
+      {{/if}}
+    </section>
+    
+    
+    
 
   </div>
 </div>

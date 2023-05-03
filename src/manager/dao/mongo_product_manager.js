@@ -3,7 +3,7 @@ const { productModel } = require("./models/products_model.js");
 class ProductManagerMongo {
   getAllProducts = async (query, options) => {
     const resp = await productModel.paginate(query, options);
-    console.log(resp);
+    // console.log(resp);
     return resp;
   }
 

@@ -6,9 +6,10 @@ const productsRouter = express.Router();
 const productsManager = require("../manager/dao/mongo_product_manager.js");
 
 const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
+const { requireUser } = require("../utils/middleware/get_username_middleware.js")
 
 
-productsRouter.get("/",  async (req, res) => {
+productsRouter.get("/", requireUser, async (req, res) => {
     try {       
         const { limit=3, page=1, sort=null } = req.query;
         const query = req.query.query ? JSON.parse(req.query.query) : {};
@@ -26,27 +27,30 @@ productsRouter.get("/",  async (req, res) => {
             return res.status(400).render("no_products_to_display");
         }
 
-        // res.status(200).render("products", {
-        //     products: docs,
-        //     hasPrevPage,
-        //     prevPage,
-        //     hasNextPage,
-        //     nextPage,
-        //     totalPages: Array(totalPages).fill().map((x, i) => i+1),
-        //     page
-        // });
-        res.status(200).send({
-            status: "success",
-            payload: docs,
-            totalPages,
-            prevPage,
-            nextPage,
+        res.status(200).render("products", {
+            username: req.usr,
+            role: req.session.user.role,
+            success: true,
+            products: docs,
             hasPrevPage,
+            prevPage,
             hasNextPage,
-            prevLink: hasPrevPage !== false ? `/api/products?page=${prevPage}` : null,
-            nextLink: hasNextPage !== false ? `/api/products?page=${nextPage}` : null,
-            page: Number(page)
+            nextPage,
+            totalPages: Array(totalPages).fill().map((x, i) => i+1),
+            page
         });
+        // res.status(200).send({
+        //     status: "success",
+        //     payload: docs,
+        //     totalPages,
+        //     prevPage,
+        //     nextPage,
+        //     hasPrevPage,
+        //     hasNextPage,
+        //     prevLink: hasPrevPage !== false ? `/api/products?page=${prevPage}` : null,
+        //     nextLink: hasNextPage !== false ? `/api/products?page=${nextPage}` : null,
+        //     page: Number(page)
+        // });
     } catch (error) {
         console.log(`Error: \n${error}`)
     }        

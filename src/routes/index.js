@@ -8,10 +8,11 @@ const { sessionRouter } = require("./session_router");
 
 const router = Router();
 
+
 router.use("/api/products", productsRouter);
 router.use("/api/carts", cartsRouter);
 router.use("/chat", viewsRouter);
-router.use('/session', sessionRouter);
+router.use('/', sessionRouter);
 
 // router.use("/products", viewsRouter);
 // router.use("/products-detail", viewsRouter);

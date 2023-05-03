@@ -1,38 +1,58 @@
 const express = require("express");
 const sessionRouter = express.Router();
-
 const { userModel } = require('../manager/dao/models/users_model');
+const { auth } = require("../utils/middleware/get_username_middleware");
 
-sessionRouter.get("/login", (req, res) => {
+
+sessionRouter.get("/", (req, res) => {
     res.render("login", {});
 });
 
-
-sessionRouter.post("/login", async (req, res) => {
+sessionRouter.post("/", async (req, res) => {
     const { username, password } = req.body;
 
-    const user = await userModel.findOne({username});
+    if (username === "adminCoder@coder.com" && password === "adminCod3r123") {
+        req.session.user = {
+            username: "admin coderhouse",
+            email: username,
+            role: "admin"
+        }  
+    }
+    else {
+        const user = await userModel.findOne({username});
 
-    if (!user) {
-        return res.send({
-            status: "error",
-            message: "Usuario y/o contraseña incorrectos"
-        })
+        req.session.user = {
+            username: user.username,
+            email: user.email,
+            role: "usuario"
+        }
+
+        if (!user) {
+            return res.send({
+                status: "error",
+                message: "Usuario y/o contraseña incorrectos"
+            })
+        }
+
+        if (password !== user.password) {
+            return res.send({
+                status: "error",
+                message: "Usuario y/o contraseña incorrectos"
+            })
+        }
     }
 
-    req.session.user = {
-        username: user.username,
-        email: user.email,
-        admin: true
-    }
 
-    res.send({
-        status: "success",
-        payload: req.session.user,
-        message: "Login correcto"
-    });
+
+
+
+    res.status(201).redirect("/api/products");
+    // res.send({
+    //     status: "success",
+    //     payload: req.session.user,
+    //     message: "Login correcto"
+    // });
 });
-
 
 sessionRouter.get("/register", (req, res) => {
     res.render("register", {});
@@ -57,7 +77,7 @@ sessionRouter.post("/register", async (req, res) => {
 
     await userModel.create(newUser);
 
-    res.status(201).render("login");
+    res.status(201).redirect("/");
 
     // res.send(201).send({
     //     status: "success",
@@ -65,17 +85,6 @@ sessionRouter.post("/register", async (req, res) => {
     // })
 });
 
-
-sessionRouter.get("/", (req, res) => {
-    if (req.session.counter) {
-        req.session.counter++
-        res.send(`Se ha visitado el sitio ${req.session.counter} veces`);
-    }
-    else {
-        req.session.counter = 1;
-        res.send("Bienvenido");
-    }
-});
 
 
 sessionRouter.get("/logout", (req, res) => {

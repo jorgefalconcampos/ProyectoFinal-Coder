@@ -22,8 +22,8 @@
                  {{!-- <a href="/api/producto">Productos</a>
         <a href="/api/usuario">Usuarios</a>
         <a href="/session">Login</a>
-        <a href="/session/register">Registrar</a>
-        <a href="/session/logout">Logout</a>
+        <a href="/register">Registrar</a>
+        <a href="/logout">Logout</a>
  --}}
 
                 <ul class="navbar-nav">
@@ -31,16 +31,25 @@
                         <a class="nav-link" href="/api/products">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/session/register" >Registrar</a>
+                        <a class="nav-link" href="/register" >Registrar</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/session/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/session/logout">Logout</a>
-                    </li>
+                    {{#if username}}
+                        <li class="mx-1 nav-item my-auto">
+                            <span class="badge bg-primary py-2">Bienvenido {{username}}</span>
+                        </li>
+                        <li class="mx-1 nav-item my-auto">
+                            <span class="pl-3 badge bg-secondary py-2">Rol: {{role}} </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    {{else}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Login</a>
+                        </li>
+                    {{/if}}
                 </ul>
             </div>
         </div>
