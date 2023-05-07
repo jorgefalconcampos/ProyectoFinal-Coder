@@ -3,25 +3,39 @@
   <div class="col-7 p-5 shadow rounded">
     <h1 class="h3 mb-5 font-weight-normal">Inicia sesión</h1>
 
-    <form method="POST" action="/" class="">
-      <label for="inputUsername" class="mb-1">Usuario</label>
+    <form method="POST" action="/" class="pb-2">
+      <label for="inputUsername" class="mb-2 h6">Usuario</label>
       <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Escribe tu usuario" required="" autofocus=""/>
-      <br/>
-      <label for="inputPassword" class="mb-1">Contraseña</label>
-      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Escribe tu contraseña" required=""/>
-      <div class="checkbox mb-3">
-        {{! <label><input type="checkbox" value="remember-me">Recordarme</label> }}
+      
+      <div class="d-flex d-flex justify-content-between pt-4">
+        <label for="inputPassword" class="mb-2 h6">Contraseña</label>
+        <div><a href="/recover">Olvidé mi contraseña</a></div>
       </div>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Escribe tu contraseña" required=""/>
+      
+
+      
+      {{!-- <div class="checkbox mb-3"> --}}
+        {{! <label><input type="checkbox" value="remember-me">Recordarme</label> }}
+      {{!-- </div> --}}
+
+
       {{! <label>Username</label>
       <input name="username" />
       <br />
       <label>password</label>
       <input name="password" />
       <input type="submit" /> }}
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
+
+      <button class="btn btn-lg btn-primary mt-4" type="submit">Ingresar</button>
+      <button class="btn btn-lg btn-dark btn-block mt-4" type="submit">Ingresar con Github</button>
     </form>
+    <div class="row pt-3">
+      <hr>
+      <p>¿No tienes usuario? <a href="/register">Crea tu cuenta ahora</a></p>
+    </div>
+
   </div>
-
-
+  
 </div>
 {{! <script src="/static/js/cookieSetter.js"></script> }}

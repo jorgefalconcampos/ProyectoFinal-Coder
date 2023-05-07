@@ -13,6 +13,8 @@ const chatManager = require("./manager/dao/mongo_chat_manager.js");
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
+const { initializePassport } = require("./config/passport_config.js");
+const passport = require("passport");
 app.engine('handlebars', handlebars.engine({defaultLayout: "home"}))
 app.set('view engine','handlebars');
 app.set('views', __dirname + '/views')
@@ -41,6 +43,12 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 const httpServer = app.listen(PORT, (err) => {
     if (err) return console.log("Error al iniciar el servidor.");
