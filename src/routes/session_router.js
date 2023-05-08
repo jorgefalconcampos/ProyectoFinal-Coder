@@ -62,10 +62,10 @@ sessionRouter.post("/", async (req, res) => {
 
 
 
+// te quedaste en 4:01:13
 
-    
+// https://coderhouse.zoom.us/rec/play/azBYte4QGVBbggAtZX9m9XiT3W4nvaMeJKW8l89JzEX49Oks4YMF_W6kYT69qgT_DL2-Fxs3NQin1u3-.F_HUQxb_eKdIJNBD?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fcoderhouse.zoom.us%2Frec%2Fshare%2FiCR7hkDcstM1wn9eaE2VRss9gl7oaK3shM89TqhzUXQuVE7R6FWQsWVkAo1DvStz.ShIgCu7ngEzSvw5X
 
-    // res.status(201).redirect("/api/products");
     res.send({
         status: "success",
         payload: req.user,
@@ -77,39 +77,25 @@ sessionRouter.get("/register", (req, res) => {
     res.render("register", {});
 });
 
-sessionRouter.post("/register", passport.authenticate("register", {failureRedirect: "/failregister"}), async (req, res) => {
-
-
-
-
-
-
-    // const  {username, first_name, last_name, email, password } = req.body;
-
-    // const exists = await userModel.findOne({email});
-
-    // if (exists) return res.send({
-    //     status: "error", 
-    //     message: "Ya existe el usuario"
-    // });
-
-    // const newUser = {
-    //     username,
-    //     first_name, 
-    //     last_name, 
-    //     email,
-    //     password: createHash(password)
-    // }
-
-    // await userModel.create(newUser);
-
-    // res.status(201).redirect("/");
-
-    res.status(201).send({
-        status: "success",
-        message: "Usuario creado"
-    })
+sessionRouter.post("/register", 
+passport.authenticate("register", {failureRedirect: "/failregister"}), async (req, res) => {
+        res.status(201).send({
+            status: "success",
+            message: "Usuario creado"
+        });
 });
+
+
+sessionRouter.get("/github", passport.authenticate("github"));
+
+sessionRouter.get(
+    "/githubcallback", 
+    passport.authenticate("github", { failureRedirect: "/session/failregister"}),
+    (req, res) => {
+        req.session.user = req.user
+        res.redirect("/api/products")
+    }
+);
 
 sessionRouter.get("/failregister", (req, res) => {
 
