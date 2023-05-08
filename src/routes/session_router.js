@@ -5,7 +5,9 @@ const { auth } = require("../utils/middleware/get_username_middleware");
 const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
 const passport = require("passport");
+const { generateToken } = require("../utils/helpers/jsonwebtoken");
 
+const users = [];
 
 sessionRouter.get("/", (req, res) => {
     res.render("login", {});
@@ -77,12 +79,28 @@ sessionRouter.get("/register", (req, res) => {
     res.render("register", {});
 });
 
-sessionRouter.post("/register", 
-passport.authenticate("register", {failureRedirect: "/failregister"}), async (req, res) => {
-        res.status(201).send({
-            status: "success",
-            message: "Usuario creado"
-        });
+sessionRouter.post("/register", async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const userExists = users.find((user) => user.email === email);
+    if (userExists) return res.status(400).send({
+        status: "error",
+        message: "El usuario ya existe"
+    })
+
+    const newUser = {
+        name, email, password
+    }
+
+    users.push()
+
+    const accessToken = generateToken(newUser);
+
+    res.status(201).send({
+        status: "success",
+        message: "Usuario creado",
+        accessToken
+    });
 });
 
 
