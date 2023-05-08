@@ -14,38 +14,26 @@ sessionRouter.get("/", (req, res) => {
 });
 
 
-sessionRouter.post("/", async (req, res) => {
+sessionRouter.post("/", passport.authenticate("login", {failureRedirect: "/failedlogin"}), async (req, res) => {
+    
+    if(!req.user) return res.status (400).send({status: "error", error: "Invalid credentials"})
 
-    const { email, password} = req.body;
-    const user = users.find((user) => user.email === email && user.password === password);
+    // console.log(req.user);
+    
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        username: req.user.username,
+        email:req.user.email
+    }
+    console.log("\n\n");
 
-    if (!user) return res.status(400).send({
-        status: "error",
-        message: "Usuario y/o contraseña incorrectos"
-    });
-
-    const accessToken = generateToken(user);
-    console.log(accessToken);
-
-
-    if (!req.user) return res.status(400).send({
-        status: "error", message: "Usuario y/o contraseña inválidos"
-    })
+    // console.log(req.session);
+    // res.send({status:"success", payload:req.user})
+    res.status(201).redirect("/api/products");
 
 
-        req.session.user = {
-            username: req.user.username,
-            email: req.user.email,
-            role: "usuario"
-        }
 
-  
-
-    res.send({
-        status: "success",
-        payload: req.user,
-        message: "Login correcto"
-    });
 });
 
 sessionRouter.get("/current", authToken, (req, res) => {
@@ -59,28 +47,11 @@ sessionRouter.get("/register", (req, res) => {
     res.render("register", {});
 });
 
-sessionRouter.post("/register", async (req, res) => {
-    const { name, email, password } = req.body;
-
-    const userExists = users.find((user) => user.email === email);
-    if (userExists) return res.status(400).send({
-        status: "error",
-        message: "El usuario ya existe"
-    })
-
-    const newUser = {
-        name, email, password
-    }
-
-    users.push()
-
-    const accessToken = generateToken(newUser);
-
+sessionRouter.post("/register", passport.authenticate("register", {failureRedirect: "/failregister"}), async (req, res) => {
     res.status(201).send({
         status: "success",
-        message: "Usuario creado",
-        accessToken
-    });
+        message: "Usuario creado"
+    })
 });
 
 

@@ -45,14 +45,13 @@ const initializePassport = () => {
     );
 
     passport.use("login", 
-    
     new LocalStrategy({
-        usernameField: "email",
+        usernameField: "username",
     }, 
-    async (email, password, done) => {
+    async (username, password, done) => {
         try {
-            const user = await userModel.findOne({email});
-
+            const user = await userModel.findOne({username});
+            
             if (!user) {
                 return done(null, false);
             }
@@ -63,7 +62,9 @@ const initializePassport = () => {
 
             if (!isValidPassword) {
                 done(null, false)
-            }            
+            }
+            
+            return done(null, user)
         } catch (error) {
             console.log(error);
             return done(error)
