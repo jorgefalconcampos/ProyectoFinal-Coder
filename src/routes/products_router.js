@@ -6,10 +6,12 @@ const productsRouter = express.Router();
 const productsManager = require("../manager/dao/mongo_product_manager.js");
 
 const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
-const { requireUser } = require("../utils/middleware/get_username_middleware.js")
+const { requireUser } = require("../utils/middleware/get_username_middleware.js");
+const { authToken } = require("../utils/helpers/jsonwebtoken.js");
 
+// te quedaste en 23:54
 
-productsRouter.get("/", requireUser, async (req, res) => {
+productsRouter.get("/", /* requireUser,*/ async (req, res) => {
     try {       
         const { limit=3, page=1, sort=null } = req.query;
         const query = req.query.query ? JSON.parse(req.query.query) : {};
