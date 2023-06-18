@@ -6,6 +6,7 @@ const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
 const passport = require("passport");
 const { generateToken, authToken } = require("../utils/helpers/jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const users = [];
 
@@ -13,24 +14,50 @@ sessionRouter.get("/", (req, res) => {
     res.render("login", {});
 });
 
+sessionRouter.get("/", (req, res) => {
+    res.sender("")
+});
 
-sessionRouter.post("/", passport.authenticate("login", {failureRedirect: "/failedlogin"}), async (req, res) => {
+// sessionRouter.post("/", passport.authenticate("login", {failureRedirect: "/failedlogin"}), async (req, res) => {
+sessionRouter.post("/", async (req, res) => {
     
-    if(!req.user) return res.status (400).send({status: "error", error: "Invalid credentials"})
 
     // console.log(req.user);
     
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        username: req.user.username,
-        email:req.user.email
-    }
+    // req.session.user = {
+    //     first_name: req.user.first_name,
+    //     last_name: req.user.last_name,
+    //     username: req.user.username,
+    //     email:req.user.email
+    // }
     console.log("\n\n");
+
+
+    
+
+    const { email, password } = req.body;
+
+    if (email !== "jorge@gmail.com" || password !== "pwd") {
+        return res.status(401).send({
+            status: "error",
+            message: "invalid cred"
+        })
+    }
+
+    let token = jwt.sign({email, password}, 'Coder$ecret', {expiresIn: '24h'});
+
+    res.cookie("coderCookieToken", token, {
+        maxAge: 60*60*1000*24,
+        httpOnly: true
+    }).status(200).send({
+        status: 'success',
+        message: 'Logged in successfully',
+        token
+    })
 
     // console.log(req.session);
     // res.send({status:"success", payload:req.user})
-    res.status(201).redirect("/api/products");
+    // res.status(201).redirect("/api/products");
 
 
 

@@ -6,15 +6,21 @@ const { Server } = require("socket.io");
 const routerApp = require("./routes/index.js")
 const multer = require("multer");
 const upload = multer();
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
 const { objConfig } = require("./config/config");
 const chatManager = require("./manager/dao/mongo_chat_manager.js");
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
-const { initializePassport } = require("./config/passport_config.js");
+const { initializePassport } = require("./passport-jwt/passport_config.js");
+
 const passport = require("passport");
+const cookieParser = require("cookie-parser");
+
+initializePassport(); //jwt
+
+app.use(passport.initialize());
+
+
 app.engine('handlebars', handlebars.engine({defaultLayout: "home"}))
 app.set('view engine','handlebars');
 app.set('views', __dirname + '/views')
@@ -22,6 +28,9 @@ app.set('views', __dirname + '/views')
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
+app.use(cookieParser("Coder"))
+// app.use(cookieParser())
+
 
 objConfig.connectDB();
 
@@ -30,23 +39,7 @@ app.use((err, req, res, next) => {
     res.status(500).send("Ocurrió un error en el servidor.");
 });
 
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: objConfig.url,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        },
-        ttl: 1000000000*24,
-    }),
-    secret: "secretCoder",
-    resave: true,
-    saveUninitialized: true
-}));
 
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 
