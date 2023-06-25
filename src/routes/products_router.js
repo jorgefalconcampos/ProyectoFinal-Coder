@@ -9,9 +9,18 @@ const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = re
 const { requireUser } = require("../utils/middleware/get_username_middleware.js");
 const { authToken } = require("../utils/helpers/jsonwebtoken.js");
 
+
+// nueva capa de modularización, controller
+const ProductController = require("../controllers/products_controller.js");
+const passport = require("passport");
+const { authPassport } = require("../passport-jwt/authPassport.js");
+const { authorization } = require("../passport-jwt/authorization_middleware.js");
+const { getProducts } = new ProductController();
+productsRouter.get("/", getProducts);
+
 // te quedaste en 23:54
 
-productsRouter.get("/", /* requireUser,*/ async (req, res) => {
+productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req, res) => {
     try {       
         const { limit=3, page=1, sort=null } = req.query;
         const query = req.query.query ? JSON.parse(req.query.query) : {};

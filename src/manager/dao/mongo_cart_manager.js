@@ -5,8 +5,8 @@ class CartManagerMongo {
     return await cartModel.find().lean();
   }
 
-  async getCartById(pid) {
-    return await cartModel.findById(pid);
+  async getCartById(cid) {
+    return await cartModel.findOne({_id: cid});
   }
 
   async addCart(newCart) {

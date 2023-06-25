@@ -15,6 +15,7 @@ const { initializePassport } = require("./passport-jwt/passport_config.js");
 
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
+const { processFunction } = require("./utils/process.js");
 
 initializePassport(); //jwt
 
@@ -31,6 +32,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(cookieParser("Coder"))
 // app.use(cookieParser())
 
+processFunction();
 
 objConfig.connectDB();
 

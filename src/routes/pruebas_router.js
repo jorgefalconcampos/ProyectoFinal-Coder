@@ -1,11 +1,11 @@
 const express = require("express");
 const passport = require("passport");
-const { passportCall } = require("../passport-jwt/passportCall");
+const { authPassport } = require("../passport-jwt/authPassport");
 const { authorization } = require("../passport-jwt/authorization_middleware");
 const pruebasRouter = express.Router();
 
 
-pruebasRouter.get('/current', passportCall('jwt'), authorization("user"), (req,res)=>{
+pruebasRouter.get('/current', authPassport('jwt'), authorization("user"), (req,res)=>{
     // pruebasRouter.get("/current", passport.authenticate("jwt", {session: false}), (req, res) => {
     res.send(req.user)
 });
@@ -15,6 +15,8 @@ pruebasRouter.get('/current', passportCall('jwt'), authorization("user"), (req,r
     // let { word } = req.params;
     // validar aquí que word no sea numérica, etc
 // });
+
+// te quedaste en 9:10 de la clase 13
 
 // USAMOS ROUTER PARAM
 pruebasRouter.param("word", async (req, res, next, word) => {

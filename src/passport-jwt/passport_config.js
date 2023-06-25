@@ -4,6 +4,7 @@ const jwt = require("passport-jwt")
 const JWTStrategy = jwt.Strategy
 const ExtractJwt = jwt.ExtractJwt
 
+// función para extraer token de las cookies
 const cookieExtractor = req => {
     let token = null
     if (req && req.cookies) {
@@ -12,6 +13,7 @@ const cookieExtractor = req => {
     return token
 }
 
+// estrategia de passport
 const initializePassport = () => {
     passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]), // jwt 
