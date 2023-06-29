@@ -2,7 +2,10 @@ const express = require("express");
 const passport = require("passport");
 const { authPassport } = require("../passport-jwt/authPassport");
 const { authorization } = require("../passport-jwt/authorization_middleware");
+const router = require(".");
 const pruebasRouter = express.Router();
+const { fork } = require('child_process')
+
 
 
 pruebasRouter.get('/current', authPassport('jwt'), authorization("user"), (req,res)=>{
@@ -36,6 +39,37 @@ pruebasRouter.get("/diccionario/:word", (req, res) => {
     let { word } = req
 
 })
+
+// ----------------------------
+
+const operacionCompleja = (params) => {
+    let result = 0;
+    for (let i=0; i< 5e9; i++) {
+        result += 1;
+    }
+    return result;
+}
+
+pruebasRouter.get("/complejablock", (req, res) => {
+    const result = operacionCompleja();
+    res.send(`<center><h1>Resultado</h1></center>${result}`);
+});
+
+pruebasRouter.get("/complejanoblock", (req, res) => {
+    const child = fork("./src/utils/compleja.js");
+    child.send("Inicia el cálculo");
+    child.on("message", result => {
+        res.send(`<center><h1>Resultado</h1></center>${result}`);
+    })
+});
+
+
+
+
+
+
+
+
 
 
 

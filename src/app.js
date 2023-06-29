@@ -1,12 +1,13 @@
 const express = require("express");
 
 const app = express();
-const PORT = 8080;
 const { Server } = require("socket.io");
 const routerApp = require("./routes/index.js")
 const multer = require("multer");
 const upload = multer();
 const { objConfig } = require("./config/config");
+const PORT = objConfig.port;
+
 const chatManager = require("./manager/dao/mongo_chat_manager.js");
 
 // configuración de handlebars
