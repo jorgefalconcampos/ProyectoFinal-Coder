@@ -1,0 +1,31 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-7 p-5 shadow rounded">
+    <h1 class="h3 mb-4 font-weight-normal">Error al crear usuario</h1>
+    <div class="accordion" id="accordionPlaceholder">
+        <div class="accordion-item my-3">
+            <h2 class="accordion-header" id="heading-reg-error">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-reg-error" aria-expanded="true" aria-controls="collapse-reg-error">
+                    <strong>Información detallada </strong>:
+                </button>
+            </h2>
+            <div id="collapse-reg-error" class="accordion-collapse collapse show" aria-labelledby="heading-reg-error" data-bs-parent="#accordionPlaceholder">
+                <div class="accordion-body">
+                    {{failureMessage}}
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <div class="row pt-3">
+        <hr>
+        {{#if failureMessage}}
+            <p><a href="/register">Crea tu cuenta</a> con otro nombre de usuario/email</p>
+        {{else}}
+            <p>Intenta el registro más tarde o bien, <a href="/register">crea tu cuenta ahora</a></p>
+        {{/if}}
+
+    </div>
+
+  </div>
+  
+</div>

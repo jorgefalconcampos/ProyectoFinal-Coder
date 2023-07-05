@@ -6,7 +6,7 @@ const productsRouter = express.Router();
 const productsManager = require("../manager/dao/mongo_product_manager.js");
 
 const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
-const { requireUser } = require("../utils/middleware/get_username_middleware.js");
+const { requireUser } = require("../utils/middleware/get_user_info.js");
 const { authToken } = require("../utils/helpers/jsonwebtoken.js");
 
 

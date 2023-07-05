@@ -4,10 +4,10 @@ const GithubStrategy = require("passport-github2");
 const { userModel } = require("../manager/dao/models/users_model");
 const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
+const { getUserInfo } = require("../utils/middleware/get_user_info");
 
-const initializePassport = () => {
-    passport.use(
-        "register", // nombre de la strategy
+const initializePassportAuth = () => {
+    passport.use("register", // nombre de la strategy
         new LocalStrategy({
             passReqToCallback: true, // acceso al req
             usernameField: "email"
@@ -16,11 +16,16 @@ const initializePassport = () => {
 
             try {
                 const { first_name, last_name, username } = req.body;
-
                 const user = await userModel.findOne({email});
-
                 if (user) {
-                    done(null, false, {message: "Existe el usuario"});
+                    req.session.messages = ["El email ya está en uso"]
+                    return done(null, false); 
+                }
+
+                const usernameTaken = await userModel.exists({username: username});
+                if (usernameTaken) {
+                    req.session.messages = ["El nombre de usuario no está disponible"]
+                    return done(null, false); 
                 }
     
                 const hashedPassword = createHash(password);
@@ -30,14 +35,13 @@ const initializePassport = () => {
                     last_name, 
                     username, 
                     email,
+                    role: "user",
                     password: hashedPassword
                 };
-    
                 const result = await userModel.create(newUser);
                 return done(null, result)
                         
-            } catch (error) {
-                console.log(error);
+            } catch (error) {                
                 return done(error)
             }
 
@@ -126,7 +130,7 @@ const initializePassport = () => {
 };
 
 module.exports = {
-    initializePassport
+    initializePassportAuth
 }
 
 
