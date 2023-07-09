@@ -1,0 +1,23 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-7 p-5 shadow rounded">
+    <h1 class="h3 mb-4 font-weight-normal">Error al obtener carrito</h1>
+    <div class="accordion" id="accordionPlaceholder">
+        <div class="accordion-item my-3">
+            <h2 class="accordion-header" id="heading-cart-error">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-cart-error" aria-expanded="true" aria-controls="collapse-cart-error">
+                    <strong>Información detallada </strong>:
+                </button>
+            </h2>
+            <div id="collapse-cart-error" class="accordion-collapse collapse show" aria-labelledby="heading-cart-error" data-bs-parent="#accordionPlaceholder">
+                <div class="accordion-body">
+                    {{message}}
+                </div>
+            </div>
+        </div>  
+    </div>
+    <div class="row pt-3">
+        <hr>
+        <p><a href="/">Regresar al inicio</a></p>
+    </div>
+  </div>
+</div>

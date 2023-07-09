@@ -26,6 +26,7 @@ productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req,
         const { limit=3, page=1, sort=null } = req.query;
         const query = req.query.query ? JSON.parse(req.query.query) : {};
         const options = sort ? { limit, page, sort: {price: sort}, lean: true} : {limit, page, lean:true}
+
         const {
             docs,
             hasPrevPage,
@@ -35,12 +36,10 @@ productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req,
             totalPages,
         } = await productsManager.getAllProducts(query, options);
 
+
         if(!docs) {
             return res.status(400).render("no_products_to_display");
         }
-
-        console.log(req.user);
-        console.log(req.session.user_info.username);
 
         res.status(200).render("products", {
             
@@ -77,8 +76,9 @@ productsRouter.get("/:pid", async (req, res) => {
         const { pid } = req.params;
         const resp = await productsManager.getProductById(pid)
         if (resp !== null) { 
-           
             res.status(200).render("product_detail", {
+                username: req.session.user_info.username,
+                role: req.session.user_info.role,
                 product: resp
             });
          }

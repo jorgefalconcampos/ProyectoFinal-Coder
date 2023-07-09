@@ -1,0 +1,37 @@
+<div class="row m-3">
+  <div class="col-9 py-2">
+    <section>
+      <h1>Mi carrito de compras</h1>
+      <hr>
+      <h2 class="lead">Productos en tu carrito: <strong>{{productsCount}}</strong></h2>
+      {{#if hasItems}}
+      <div class="accordion" id="productsAccordion">
+        {{#each productsInCart}}
+          <div class="shadow accordion-item my-3">
+            <h2 class="accordion-header" id="heading-{{this.product.code}}">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{this.product.code}}" aria-expanded="true" aria-controls="collapse-{{this.product.code}}">
+                <strong>{{this.product.title}}</strong>: ${{this.product.price}}
+              </button>
+            </h2>
+            <div id="collapse-{{this.product.code}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{this.product.code}}">
+              <div class="accordion-body">
+                Código de producto: {{this.product.code}} <br />
+                <hr />
+                <a class="btn btn-primary" href="/api/products/{{this.product._id}}" role="button">Ver detalle</a>
+                {{!-- <button type="button" class="btn btn-danger">Eliminar</button> --}}
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      {{else}}
+      <div class="alert alert-warning py-3 mt-5" role="alert">
+        Al parecer este carrito está vacío, <a href="/">haz clic aquí</a> para regresar al inicio
+      </div>
+      {{/if}}
+    </section>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

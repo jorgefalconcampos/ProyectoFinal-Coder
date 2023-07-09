@@ -5,9 +5,11 @@ const authorization = role => {
 
         // if (!req.user) return res.status(401).json({"status": "error", error: "Unauthorized!!!!!!!"})
 
-
-        if (req.session.user_info.role !== role) return res.status(403).json({"status": "error", error: "No permissions!!!!!!!"})
-        next()
+        if (req.session?.user_info) {
+            if (req.session.user_info.role !== role) return res.status(403).json({"status": "error", error: "No permissions!!!!!!!"})
+            next()
+        }
+        else { res.redirect("/login-required"); }
     }
 }
 

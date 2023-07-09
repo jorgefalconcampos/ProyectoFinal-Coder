@@ -15,13 +15,18 @@ const jwt = require("jsonwebtoken");
 // const users = [];
 
 sessionRouter.get("/", (req, res) => {
-    res.render("login", {});
+    res.render("login", {
+        isLoginView: true
+    });
 });
 
 // sessionRouter.get("/", (req, res) => {
 //     res.sender("")
 // });
 
+sessionRouter.get("/login-required", (req, res) => {
+    res.render("login_required", {});
+});
 
 
 sessionRouter.post("/", 
@@ -77,7 +82,7 @@ sessionRouter.post("/register",
     passport.authenticate("register", {
         failureRedirect: "/failregister",
     }), async (req, res) => {
-        res.redirect("/success-register")
+        res.redirect("/success-register");
     }
 );
 

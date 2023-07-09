@@ -30,9 +30,15 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="/api/products">Productos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register" >Registrar</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Carrito</a>
+                       
                     </li>
+                    {{#if isLoginView}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register" >Registrar</a>
+                        </li>
+                    {{/if}}
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     {{#if username}}
@@ -41,14 +47,17 @@
                         </li>
                         <li class="mx-1 nav-item my-auto">
                             <span class="pl-3 badge bg-secondary py-2">Rol: {{role}} </span>
+                            {{!-- <span class="pl-3 badge bg-secondary py-2"> {{test}} </span> --}}
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
                         </li>
                     {{else}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Login</a>
-                        </li>
+                        {{#unless isLoginView}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Login</a>
+                            </li>
+                        {{/unless}}
                     {{/if}}
                 </ul>
             </div>

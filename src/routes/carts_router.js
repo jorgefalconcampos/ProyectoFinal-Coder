@@ -10,14 +10,38 @@ const { validateFormatInUrl } = require("../utils/middleware/validations.js");
 // const dirPath = path.join(__dirname, "../manager/files/carts.json");
 // const carts = new Manager(dirPath);
 
-cartsRouter.get("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
+// cartsRouter.get("/", async(req, res) => { 
+//     // return res.status(400).redirect("/api/products");
+// });
 
 cartsRouter.get("/:cid", async (req, res) => {
     const { cid } = req.params;
-    // await carts.getRecordById(cid).then((resp) => {
     await cartsManager.getCartById(cid).then((resp) => {
-        if (resp !== null) { res.json(resp); }
-        else { res.status(404).send({"msg": `No se encontró un carrito con el ID ${cid}`}); }
+        if (resp !== null) { 
+
+            let hasItems = false;
+            resp.products?.length > 0 ? hasItems = true : "";
+
+            const productsInCart = resp.products.map(({ _id, product: { __v, ...restProduct }, ...rest }) => ({
+                ...rest,
+                product: {
+                    _id: restProduct._id,
+                    ...restProduct
+                }
+            }));
+
+            res.status(200).render("cart_detail", {
+                username: req.session.user_info.username,
+                role: req.session.user_info.role,
+                hasItems: hasItems,
+                productsInCart: productsInCart,
+                productsCount: productsInCart.length,
+            });
+        }
+        else { 
+            const not_found = true; const message = `No se encontró un carrito con el ID ${cid}`;
+            res.status(404).render("cart_not_found", {not_found, message});
+         }
     }).catch((error) => console.log(`Error: \n${error}`));
 });
 
