@@ -55,7 +55,15 @@
           </li>
         {{/if}}
         {{#each totalPages}}
-          <li class="page-item"><a class="page-link" href="/api/products/?page={{this}}">{{this}}</a></li>
+            {{#ifeq ../page @index}}
+              <li class="page-item active">                
+                <a aria-label="{{this}} (current)" class="page-link" href="/api/products/?page={{this}}">{{this}}</a>
+              </li>
+            {{else}}
+              <li class="page-item">
+                <a class="page-link" href="/api/products/?page={{this}}">{{this}}</a>
+              </li>
+            {{/ifeq}}
         {{/each}}
         {{#if hasNextPage}}
           <li class="page-item">

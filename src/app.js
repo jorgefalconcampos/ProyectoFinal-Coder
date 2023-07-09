@@ -15,6 +15,8 @@ const MongoStore = require("connect-mongo");
 
 // configuración de handlebars
 const handlebars = require("express-handlebars");
+const helpers = require("./utils/helpers/handlebars_helpers");
+
 const { initializePassportAuth } = require("./config/passport_config_auth.js");
 const { initializePassport } = require("./passport-jwt/passport_config.js");
 
@@ -23,6 +25,7 @@ const cookieParser = require("cookie-parser");
 const { processFunction } = require("./utils/process.js");
 const { initSocket } = require("./socket_file.js");
 const { getUserInfo } = require("./utils/middleware/get_user_info.js");
+const handlebars_helpers = require("./utils/helpers/handlebars_helpers.js");
 
 
 app.use(session({
@@ -47,7 +50,7 @@ app.use(passport.session());
 
 
 
-app.engine('handlebars', handlebars.engine({defaultLayout: "home"}))
+app.engine('handlebars', handlebars.engine({defaultLayout: "home", helpers: helpers}))
 app.set('view engine','handlebars');
 app.set('views', __dirname + '/views')
 

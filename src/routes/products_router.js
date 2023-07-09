@@ -42,7 +42,6 @@ productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req,
         }
 
         res.status(200).render("products", {
-            
             username: req.session.user_info.username,
             role: req.session.user_info.role,
             success: true,
@@ -52,8 +51,10 @@ productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req,
             hasNextPage,
             nextPage,
             totalPages: Array(totalPages).fill().map((x, i) => i+1),
-            page
+            page: Number(page)-1
         });
+
+      
         // res.status(200).send({
         //     status: "success",
         //     payload: docs,
