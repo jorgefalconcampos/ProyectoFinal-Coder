@@ -5,6 +5,7 @@ const { userModel } = require("../manager/dao/models/users_model");
 const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
 const { getUserInfo } = require("../utils/middleware/get_user_info");
+const { githubConfig } = require("../config/config");
 
 const initializePassportAuth = () => {
     passport.use("register", // nombre de la strategy
@@ -13,7 +14,6 @@ const initializePassportAuth = () => {
             usernameField: "email"
         },
         async (req, email, password, done) => {
-
             try {
                 const { first_name, last_name, username } = req.body;
                 const user = await userModel.findOne({email});
@@ -38,7 +38,14 @@ const initializePassportAuth = () => {
                     role: "user",
                     password: hashedPassword
                 };
+
                 const result = await userModel.create(newUser);
+
+                let user_info = newUser;
+                delete user_info.password;  // eliminamos el campo password
+                user_info = { ...user_info, full_name: `${user_info.first_name} ${user_info.last_name}`};
+                req.session.user_info = user_info; // guardamos en session.user_info la data del usuario
+                
                 return done(null, result)
                         
             } catch (error) {                
@@ -49,53 +56,53 @@ const initializePassportAuth = () => {
     );
 
     passport.use("login", 
-    new LocalStrategy({
-        usernameField: "username",
-    }, 
-    async (username, password, done) => {
-        try {
-            const user = await userModel.findOne({username});
-            
-            if (!user) {
-                return done(null, false);
-            }
-            const isValidPassword = checkValidPassword({
-                hashedPassword: user.password,
-                password,
-            });
+        new LocalStrategy({
+            passReqToCallback: true, // acceso al req
+            usernameField: "username",
+        }, 
+        async (req, username, password, done) => {
+            try {
+                const user = await userModel.findOne({username});
 
-            if (!isValidPassword) {
-                done(null, false)
+                if (!user) {
+                    req.session.messages = ["Usuario o contraseña incorrectos"]
+                    return done(null, false);
+                }
+                const isValidPassword = checkValidPassword({
+                    hashedPassword: user.password,
+                    password,
+                });
+
+                if (!isValidPassword) {
+                    req.session.messages = ["Usuario o contraseña incorrectos"]
+                    done(null, false)
+                }                
+                
+                return done(null, user)
+            } catch (error) {
+                console.log(error);
+                return done(error)
             }
-            
-            return done(null, user)
-        } catch (error) {
-            console.log(error);
-            return done(error)
-        }
-    }   
+        }   
     ));
 
     passport.use("github", new GithubStrategy({
-        clientID: "Iv1.e85103520356d31b",
-        clientSecret: "a48808adc386ebf6d4f4b09fb9014d3fba4ea100",
-        callbackURL: "http://localhost:8080/githubcallback",
+        clientID: githubConfig.clientID,
+        clientSecret: githubConfig.clientSecret,
+        callbackURL: githubConfig.callbackURL,
         scope: ["user:email"]
-
-
     }, async (accessToken, refreshToken, profile, done) => {
-        console.log({profile});
-
         try {
             const user = await userModel.findOne({ email: profile.emails[0].value});
             if (!user) {
                 const newUser = {
                     first_name: profile._json.name,
                     last_name: profile._json.name,
-                    // last_name: ".",
+                    full_name: profile._json.name,
                     username: profile.username,
                     email: profile.emails[0].value,
-                    password: "."
+                    password: ".",
+                    role: "admin"
                 };
                 const result = await userModel.create(newUser);
                 return done (null, result);
@@ -105,20 +112,13 @@ const initializePassportAuth = () => {
             }            
         } catch (error) {
             return done(error);
-            
         }
-
-        
-
-
-    }  
-    
-    
-    ));
+    }));
 
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
+
     passport.deserializeUser(async (id, done) => {
         try {
             const user = await userModel.findById(id);
@@ -133,9 +133,3 @@ module.exports = {
     initializePassportAuth
 }
 
-
-// github Client secret key
-// a48808adc386ebf6d4f4b09fb9014d3fba4ea100
-
-
-// Client ID: Iv1.e85103520356d31b

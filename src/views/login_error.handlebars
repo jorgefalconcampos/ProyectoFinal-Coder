@@ -1,6 +1,6 @@
 <div class="row d-flex justify-content-center">
   <div class="col-7 p-5 shadow rounded">
-    <h1 class="h3 mb-4 font-weight-normal">Error al crear usuario</h1>
+    <h1 class="h3 mb-4 font-weight-normal">Error al iniciar sesión</h1>
     <div class="accordion" id="accordionPlaceholder">
         <div class="accordion-item my-3">
             <h2 class="accordion-header" id="heading-reg-error">
@@ -18,9 +18,9 @@
     <div class="row pt-3">
         <hr>
         {{#if failureMessage}}
-            <p><a href="/register">Crea tu cuenta</a> con otro nombre de usuario/email</p>
+            <p>No se pudo iniciar sesión con las credenciales ingresadas</p>
         {{else}}
-            <p>Intenta el registro más tarde o bien, <a href="/register">crea tu cuenta ahora</a></p>
+            <p>Intenta iniciar sesión más tarde o bien, <a href="/">ve al inicio</a></p>
         {{/if}}
     </div>
   </div>

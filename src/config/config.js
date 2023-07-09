@@ -15,6 +15,7 @@ const objConfig = {
     adminPassword: process.env.ADMIN_PWD || "",
     jwtSigned: process.env.SECRET || "",
 
+
     connectDB: async ()=>{
         try {
             await connect(url)
@@ -26,6 +27,13 @@ const objConfig = {
     url: "mongodb+srv://jorgexd1999:ILcVLrZ4l012WgqY@cluster0.z2wcq6e.mongodb.net/ecommerce?retryWrites=true&w=majority"
 }
 
+const githubConfig = {
+    clientID: process.env.CLIENT_ID || "",
+    clientSecret: process.env.CLIENT_SECRET || "",
+    callbackURL: process.env.CALLBACK_URL || "",
+}
+
 module.exports = {
-    objConfig
+    objConfig,
+    githubConfig
 }

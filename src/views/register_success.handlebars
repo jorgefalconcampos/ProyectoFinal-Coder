@@ -1,31 +1,21 @@
 <div class="row d-flex justify-content-center">
-
   <div class="col-7 p-5 shadow rounded">
-
     {{#if register_success}}
       <h1 class="h3 mb-5 font-weight-normal">Usuario creado con éxito</h1>
-
       {{#with user_info}}
         <p class="h5 pb-2">¡Gracias por registrarte {{first_name}}!</p>
         <p>Tu usuario <b>{{username}}</b> ahora está asociado al siguiente email: <b>{{email}}</b></p>
       {{/with}}
-      
       <div class="row pt-3">
         <hr>
         <p>¿Ya tienes usuario? <a href="/">Inicia sesión con tu cuenta ahora</a></p>
       </div>
-
       {{else}}
         <h1 class="h3 mb-5 font-weight-normal">Al parecer no se ha creado una cuenta</h1>
-        
         <div class="row pt-3">
           <hr>
           <p><a href="/register">Haz clic aquí</a> para crear una cuenta ahora</p>
         </div>
       {{/if}}
-
-   
-
   </div>
-  
 </div>

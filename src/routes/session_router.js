@@ -6,10 +6,13 @@ const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
 const passport = require("passport");
 const { generateToken, authToken } = require("../utils/helpers/jsonwebtoken");
+const { authorization } = require("../passport-jwt/authorization_middleware.js");
+
+
 const jwt = require("jsonwebtoken");
 // const { setUserInfo } = require("../utils/middleware/set_user_info_middleware");
 
-const users = [];
+// const users = [];
 
 sessionRouter.get("/", (req, res) => {
     res.render("login", {});
@@ -19,50 +22,43 @@ sessionRouter.get("/", (req, res) => {
 //     res.sender("")
 // });
 
-// sessionRouter.post("/", passport.authenticate("login", {failureRedirect: "/failedlogin"}), async (req, res) => {
-sessionRouter.post("/", async (req, res) => {
-    
-
-    // console.log(req.user);
-    
-    // req.session.user = {
-    //     first_name: req.user.first_name,
-    //     last_name: req.user.last_name,
-    //     username: req.user.username,
-    //     email:req.user.email
-    // }
-    console.log("\n\n");
 
 
-    
+sessionRouter.post("/", 
+    // authorization("admin"),
+    passport.authenticate("login", {
+        failureRedirect: "/error-login"}), async (req, res) => {
+            const { email, password } = req.body;
 
-    const { email, password } = req.body;
+        // if (email !== "jorge@gmail.com" || password !== "pwd") {
+        //     return res.status(401).send({
+        //         status: "error",
+        //         message: "invalid cred"
+        //     })
+        // }
 
-    // if (email !== "jorge@gmail.com" || password !== "pwd") {
-    //     return res.status(401).send({
-    //         status: "error",
-    //         message: "invalid cred"
-    //     })
-    // }
+        let user_info = ({...req.user}._doc);
+        delete user_info._id; delete user_info.password; delete user_info.__v;
+        user_info = { ...user_info, full_name: `${user_info.first_name} ${user_info.last_name}`};
+        req.session.user_info = user_info;
 
-    let token = jwt.sign({email, password}, 'Coder$ecret', {expiresIn: '24h'});
+        let token = jwt.sign({email, password}, 'Coder$ecret', {expiresIn: '24h'});
 
-    res.cookie("coderCookieToken", token, {
-        maxAge: 60*60*1000*24,
-        httpOnly: true
-    }).status(200).send({
-        status: 'success',
-        message: 'Logged in successfully',
-        token
-    })
+        res.cookie("coderCookieToken", token, {
+            maxAge: 60*60*1000*24,
+            httpOnly: true
+        }).redirect("/api/products");
+    }
+);
 
-    // console.log(req.session);
-    // res.send({status:"success", payload:req.user})
-    // res.status(201).redirect("/api/products");
-
+sessionRouter.get("/error-login", async (req, res) => {
+    const failureMessage = req.session?.messages ? req.session.messages[0] : "Error desconocido al iniciar sesión";
+    // console.log(req.session.messages);
+    res.render("login_error", {failureMessage});
+    delete req.session.messages;
+})
 
 
-});
 
 sessionRouter.get("/current", authToken, (req, res) => {
     res.send({
@@ -71,32 +67,17 @@ sessionRouter.get("/current", authToken, (req, res) => {
     })
 });
 
+
+
 sessionRouter.get("/register", (req, res) => {
     res.render("register", {});
 });
 
 sessionRouter.post("/register", 
-    // setUserInfo,
     passport.authenticate("register", {
-        successRedirect: "/success-register",
         failureRedirect: "/failregister",
     }), async (req, res) => {
-    
-    // res.status(201).send({
-    //     status: "success",
-    //     message: "Usuario creado"
-    // })
-});
-
-
-sessionRouter.get("/github", passport.authenticate("github"));
-
-sessionRouter.get(
-    "/githubcallback", 
-    passport.authenticate("github", { failureRedirect: "/session/failregister"}),
-    (req, res) => {
-        req.session.user = req.user
-        res.redirect("/api/products")
+        res.redirect("/success-register")
     }
 );
 
@@ -121,6 +102,43 @@ sessionRouter.get("/failregister", (req, res) => {
     res.render("register_error", {failureMessage});
     delete req.session.messages;
 });
+
+
+sessionRouter.get("/github", passport.authenticate("github"));
+
+sessionRouter.get(
+    "/githubcallback", 
+    passport.authenticate("github", { failureRedirect: "/session/failregister"}),
+    (req, res) => {
+        console.log("\n\n");
+        console.log(req);
+        console.log("\n\n");
+
+        
+        console.log("user_info: ");
+        console.log(req.session.user_info);
+        let user_info = ({...req.user}._doc);
+        delete user_info._id; delete user_info.__v;
+        console.log("github \n\n");
+        console.log(user_info);
+        req.session.user_info = user_info
+        // user_info = { ...user_info, full_name: `${user_info.first_name} ${user_info.last_name}`};
+        // req.session.user_info = user_info;
+
+
+        
+        console.log("user_info: ");
+        console.log();
+        console.log(req.session.user_info);
+
+
+
+        // req.session.user_info.username = req.user
+        res.redirect("/api/products")
+    }
+);
+
+
 
 sessionRouter.get("/recover", (req, res) => {
     res.render("recover_password", {});

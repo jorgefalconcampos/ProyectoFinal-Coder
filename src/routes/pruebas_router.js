@@ -19,7 +19,6 @@ pruebasRouter.get('/current', authPassport('jwt'), authorization("user"), (req,r
     // validar aquí que word no sea numérica, etc
 // });
 
-// te quedaste en 9:10 de la clase 13
 
 // USAMOS ROUTER PARAM
 pruebasRouter.param("word", async (req, res, next, word) => {

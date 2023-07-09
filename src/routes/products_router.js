@@ -16,11 +16,12 @@ const passport = require("passport");
 const { authPassport } = require("../passport-jwt/authPassport.js");
 const { authorization } = require("../passport-jwt/authorization_middleware.js");
 const { getProducts } = new ProductController();
-productsRouter.get("/", getProducts);
 
-// te quedaste en 23:54
+// productsRouter.get("/", getProducts);
+
 
 productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req, res) => {
+// productsRouter.get("/", authPassport("jwt"), async (req, res) => {
     try {       
         const { limit=3, page=1, sort=null } = req.query;
         const query = req.query.query ? JSON.parse(req.query.query) : {};
@@ -38,9 +39,13 @@ productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req,
             return res.status(400).render("no_products_to_display");
         }
 
+        console.log(req.user);
+        console.log(req.session.user_info.username);
+
         res.status(200).render("products", {
-            username: req.usr,
-            role: req.session.user.role,
+            
+            username: req.session.user_info.username,
+            role: req.session.user_info.role,
             success: true,
             products: docs,
             hasPrevPage,
