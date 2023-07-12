@@ -1,135 +1,43 @@
-const path = require("path");
 const express = require("express");
 const productsRouter = express.Router();
 
-
-const productsManager = require("../manager/dao/mongo_product_manager.js");
-
-const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
+const { validateBodyForProduct, validateId } = require("../utils/middleware/validations.js")
 const { requireUser } = require("../utils/middleware/get_user_info.js");
 const { authToken } = require("../utils/helpers/jsonwebtoken.js");
 
-
-// nueva capa de modularización, controller
 const ProductController = require("../controllers/products_controller.js");
 const passport = require("passport");
 const { authPassport } = require("../passport-jwt/authPassport.js");
 const { authorization } = require("../passport-jwt/authorization_middleware.js");
-const { getProducts } = new ProductController();
-
-// productsRouter.get("/", getProducts);
-
-
-productsRouter.get("/", authPassport("jwt"), authorization("admin"), async (req, res) => {
-// productsRouter.get("/", authPassport("jwt"), async (req, res) => {
-    try {       
-        const { limit=3, page=1, sort=null } = req.query;
-        const query = req.query.query ? JSON.parse(req.query.query) : {};
-        const options = sort ? { limit, page, sort: {price: sort}, lean: true} : {limit, page, lean:true}
-
-        const {
-            docs,
-            hasPrevPage,
-            prevPage,
-            hasNextPage,
-            nextPage,
-            totalPages,
-        } = await productsManager.getAllProducts(query, options);
+const { 
+    getProducts, 
+    getProductById,
+    createProduct,
+    updateProductById,
+    deleteProductById
+} = new ProductController();
 
 
-        if(!docs) {
-            return res.status(400).render("no_products_to_display");
-        }
+productsRouter.get("/", authPassport("jwt"), authorization("admin"), getProducts);
 
-        res.status(200).render("products", {
-            username: req.session.user_info.username,
-            role: req.session.user_info.role,
-            success: true,
-            products: docs,
-            hasPrevPage,
-            prevPage,
-            hasNextPage,
-            nextPage,
-            totalPages: Array(totalPages).fill().map((x, i) => i+1),
-            page: Number(page)-1
-        });
+productsRouter.get("/:pid", getProductById);
 
-      
-        // res.status(200).send({
-        //     status: "success",
-        //     payload: docs,
-        //     totalPages,
-        //     prevPage,
-        //     nextPage,
-        //     hasPrevPage,
-        //     hasNextPage,
-        //     prevLink: hasPrevPage !== false ? `/api/products?page=${prevPage}` : null,
-        //     nextLink: hasNextPage !== false ? `/api/products?page=${nextPage}` : null,
-        //     page: Number(page)
-        // });
-    } catch (error) {
-        console.log(`Error: \n${error}`)
-    }        
-});
-
-productsRouter.get("/:pid", async (req, res) => {
-    try {
-        const { pid } = req.params;
-        const resp = await productsManager.getProductById(pid)
-        if (resp !== null) { 
-            res.status(200).render("product_detail", {
-                username: req.session.user_info.username,
-                role: req.session.user_info.role,
-                product: resp
-            });
-         }
-        else { res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`}); }
-        
-    } catch (error) {
-        console.log(`Error: \n${error}`);
-    }
-
-});
-
-productsRouter.post("/", validateBodyForProduct, async (req, res) => {
-    const data = createBodyForProduct(req.body);
-    await productsManager.addProduct(data).then((resp) => {
-        res.status(201).send({
-            "msg": `Se creó el producto con el ID ${resp.id}`,
-        })
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
+productsRouter.post("/", validateBodyForProduct, createProduct);
 
 productsRouter.put("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
 
-productsRouter.put("/:pid", validateBodyForProduct, async (req, res) => {
-    const { pid } = req.params;
-    const data = createBodyForProduct(req.body);
-    await productsManager.updateProduct(pid, data).then((resp) => {
-        if (resp !== false) {
-            res.status(200).send({ 
-                "msg": `Se actualizó el producto con el ID ${pid}`,
-            });
-        }
-        else {
-            res.status(404).send({"msg": `No se encontró un producto con el ID ${pid}`});
-        }
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
+productsRouter.put("/:pid", validateBodyForProduct, updateProductById);
 
 productsRouter.delete("/", async(req, res) => { res.status(404).send({"msg": "Agrega un ID"}); });
 
-productsRouter.delete("/:pid", async (req, res) => {
-    const { pid } = req.params;
-    // await products.deleteRecord(pid).then((resp) => {
-    await productsManager.deleteProduct(pid).then((resp) => {
-        if (resp !== false) {
-            res.status(200).send({
-                "msg": `Se eliminó el producto con el ID ${pid}`,
-                "product_data": resp
-            });
-        }
-    });
+productsRouter.delete("/:pid", deleteProductById);
+
+productsRouter.param("pid", async (req, res, next, pid) => {
+    console.log("pid " + pid);
+    if (req.method !== "GET") {
+        if (!validateId(pid)) { res.status(422).send({"msg": `El parámetro '${pid}' no es un ID válido`});}
+        else { next(); }
+    }
 });
 
 module.exports = {

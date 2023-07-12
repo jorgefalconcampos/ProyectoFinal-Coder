@@ -1,3 +1,4 @@
+const { Types } = require("mongoose");
 
 /* middleware que valida lo siguiente:
     - que exista el queryParam limit/id
@@ -81,11 +82,22 @@ const createBodyForProduct = (reqBody) => {
     return data;
 }
 
+/* valida que el ID de un producto o carrito no sea exclusivamente numérico y/o que 
+no sea exclusivamente texto*/
+const validateId = (id) => {
+    const alpha = /^[a-zA-Z]+$/;  
+    const numeric = /^\d+$/; 
+    if (!Types.ObjectId.isValid(id)) { return false; }
+    if (!alpha.test(id) && !numeric.test(id)) { return true; }
+    return false;
+}
+
 
 
 module.exports = {
     validateFormatInUrl,
     validateBodyForProduct,
-    createBodyForProduct
+    createBodyForProduct,
+    validateId
 
 }
