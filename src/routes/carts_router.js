@@ -6,6 +6,7 @@ const cartsManager = require("../manager/dao/mongo_cart_manager.js");
 
 // const { Manager } = require("../manager/dao/fs_manager.js");
 const { validateFormatInUrl } = require("../utils/middleware/validations.js");
+const CartController = require("../controllers/carts_controller.js");
 
 // const dirPath = path.join(__dirname, "../manager/files/carts.json");
 // const carts = new Manager(dirPath);
@@ -14,47 +15,19 @@ const { validateFormatInUrl } = require("../utils/middleware/validations.js");
 //     // return res.status(400).redirect("/api/products");
 // });
 
-cartsRouter.get("/:cid", async (req, res) => {
-    const { cid } = req.params;
-    await cartsManager.getCartById(cid).then((resp) => {
-        if (resp !== null) { 
+const {
+    getCartById,
+    createCart,
+    updateCartById,
 
-            let hasItems = false;
-            resp.products?.length > 0 ? hasItems = true : "";
+    deleteCartById
+    
+} = new CartController();
 
-            const productsInCart = resp.products.map(({ _id, product: { __v, ...restProduct }, ...rest }) => ({
-                ...rest,
-                product: {
-                    _id: restProduct._id,
-                    ...restProduct
-                }
-            }));
-
-            res.status(200).render("cart_detail", {
-                username: req.session.user_info.username,
-                role: req.session.user_info.role,
-                hasItems: hasItems,
-                productsInCart: productsInCart,
-                productsCount: productsInCart.length,
-            });
-        }
-        else { 
-            const not_found = true; const message = `No se encontró un carrito con el ID ${cid}`;
-            res.status(404).render("cart_not_found", {not_found, message});
-         }
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
+cartsRouter.get("/:cid", getCartById);
 
 
-cartsRouter.post("/", async (req, res) => {
-    const data = req.body.products ? {products: req.body.products} : {products: []};
-    // await carts.createRecord(data).then((resp) => {
-    await cartsManager.addCart(data).then((resp) => {
-        res.status(201).send({
-            "msg:": `Se creó el carrito con el ID ${resp.id}`
-        });
-    }).catch((error) => console.log(`Error: \n${error}`));
-});
+cartsRouter.post("/", createCart);
 
 const validateCart = (req, res, next) => {
     carts.getRecords().then((get_resp) => {
@@ -68,14 +41,9 @@ const validateCart = (req, res, next) => {
     });
 }
 
-cartsRouter.put("/:cid", async (req, res) => {
+cartsRouter.put("/:cid", updateCartById);
 
-});
-
-cartsRouter.delete("/:cid", async (req, res) => {
-    const { cid } = req.query;
-    await cartsManager.deleteAllProductsFromCart(cid);
-});
+cartsRouter.delete("/:cid", deleteCartById);
 
 
 

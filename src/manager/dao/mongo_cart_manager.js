@@ -1,9 +1,6 @@
 const { cartModel } = require("./models/carts_model.js");
 
 class CartManagerMongo {
-  async getAllCarts() {
-    return await cartModel.find().lean();
-  }
 
   async getCartById(cid) {
     return await cartModel.findOne({_id: cid}).lean();

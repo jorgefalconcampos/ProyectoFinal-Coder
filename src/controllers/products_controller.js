@@ -1,5 +1,5 @@
-const productsManager = require("../manager/dao/mongo_product_manager.js");
-const { validateFormatInUrl, validateBodyForProduct, createBodyForProduct } = require("../utils/middleware/validations.js")
+const productsManager = require("../manager/dao/mongo_product_manager");
+const { createBodyForProduct } = require("../utils/middleware/validations")
 
 
 class ProductController {
