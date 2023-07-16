@@ -20,19 +20,22 @@ class CartManagerMongo {
     }})
   }
 
-  async deleteCart(pid) {
-    return await cartModel.deleteOne({pid})
+  // eliminar el carrito junto con todos sus productos
+  async deleteCart(cid) {
+    return await cartModel.deleteOne({_id: cid})
   }
 
-  async updateProductFromCart(cid, pid) {
-    return await cartModel.findById(pid);
-  }
+  // async updateProductFromCart(cid, pid) {
+  //   return await cartModel.findById(pid);
+  // }
 
+  // vaciar carrito, eliminar solo sus productos pero mantener el carrito
   async deleteAllProductsFromCart(cid) {
     const resp = await cartModel.findOne(cid);
     console.log(resp);
   }
 
+  // borra solo un producto del carrito
   async deleteProductFromCart(cid, pid) {
     return await cartModel.findById(pid);
   }

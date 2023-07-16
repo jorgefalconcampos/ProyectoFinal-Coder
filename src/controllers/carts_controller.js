@@ -75,7 +75,13 @@ class CartController {
 
     deleteCartById = async(req, res) => {
         const { cid } = req.params;
-        await cartsManager.deleteAllProductsFromCart(cid);
+        const r = await cartsManager.deleteCart(cid);
+        console.log(r);
+        if (r.deletedCount > 0) {
+            res.status(200).send({ 
+                "msg": `Se eliminó el carrito con el ID ${cid}`,
+            });
+        }
     }
 
 
