@@ -33,11 +33,11 @@ productsRouter.delete("/", async(req, res) => { res.status(404).send({"msg": "Ag
 productsRouter.delete("/:pid", deleteProductById);
 
 productsRouter.param("pid", async (req, res, next, pid) => {
-    console.log("pid " + pid);
     if (req.method !== "GET") {
         if (!validateId(pid)) { res.status(422).send({"msg": `El parámetro '${pid}' no es un ID válido`});}
         else { next(); }
     }
+    next();
 });
 
 module.exports = {

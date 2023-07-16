@@ -10,16 +10,13 @@ class CartManagerMongo {
     return await cartModel.create(newCart);
   }
 
-  async updateCart(pid, CartToUpdate) {
-    return await cartModel.updateOne({_id: pid}, {$set: {
-      title: CartToUpdate.title,
-      description: CartToUpdate.description,
-      code: CartToUpdate.code,
-      price: CartToUpdate.price,
-      status: CartToUpdate.status,
-      stock: CartToUpdate.stock,
-      thumbnails: CartToUpdate.thumbnails,
-      category: CartToUpdate.category
+  async updateCart(cid, CartToUpdate) {
+
+    console.log(cid);
+    console.log("\n\n\n");
+
+    return await cartModel.updateOne({_id: cid}, {$set: {
+      products: CartToUpdate.products
     }})
   }
 
