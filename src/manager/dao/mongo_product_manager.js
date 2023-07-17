@@ -6,7 +6,6 @@ class ProductManagerMongo {
     // console.log(resp);
     return resp;
   }
-  // te quedaste en clase 13, 37:30
 
   getProductById = async(pid) => {
     const resp = await productModel.findOne({_id: pid}).lean();

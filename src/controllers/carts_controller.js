@@ -45,12 +45,6 @@ class CartController {
         }).catch((error) => console.log(`Error: \n${error}`));
     }
 
-
-
-
-
-
-
     updateCartById = async(req, res) => {
         const { cid } = req.params;
         let hasItems = false;
@@ -75,9 +69,8 @@ class CartController {
 
     deleteCartById = async(req, res) => {
         const { cid } = req.params;
-        const r = await cartsManager.deleteCart(cid);
-        console.log(r);
-        if (r.deletedCount > 0) {
+        const result = await cartsManager.deleteCart(cid);
+        if (result.deletedCount > 0) {
             res.status(200).send({ 
                 "msg": `Se eliminó el carrito con el ID ${cid}`,
             });
