@@ -1,6 +1,6 @@
 const express = require("express");
 const sessionRouter = express.Router();
-const { userModel } = require('../manager/dao/models/users_model');
+const { userModel } = require('../manager/dao/mongo/models/users_model');
 const { auth, getUserInfo } = require("../utils/middleware/get_user_info");
 const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");

@@ -15,7 +15,7 @@ class Manager {
     }
 
 
-    getRecords = async () => {
+    getAll = async () => {
         try {
             if (fs.existsSync(this.path) && (fs.readFileSync(this.path).length !== 0)) { 
                 const products = await fs.promises.readFile(this.path, 'utf-8');
@@ -34,7 +34,7 @@ class Manager {
     }
 
 
-    getRecordById = async (id) => {
+    get = async (id) => {
         let records = await this.getRecords();
         let parsedId = parseInt(id);
         try {
@@ -49,7 +49,7 @@ class Manager {
         la clase en el router, se le pasa el path del archivo al que se va a guardar, por
         lo tanto este método es reutilizable.
     */
-    createRecord = async (newRecord) => {
+    create = async (newRecord) => {
         let records = await this.getRecords();
         try {
             let newId;
@@ -68,7 +68,7 @@ class Manager {
         la clase en el router, se le pasa el path del archivo al que se va a guardar, por
         lo tanto este método es reutilizable.
     */
-    updateRecord = async (id, updateData) => {
+    update = async (id, updateData) => {
         const records = await this.getRecords();
         let parsedId = parseInt(id);
         try {
@@ -174,7 +174,7 @@ class Manager {
     }
 
 
-    deleteRecord = async (id) => {
+    delete = async (id) => {
         const exists = await this.getRecordById(id);
         let parsedId = parseInt(id);
         if (exists) {

@@ -1,7 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const GithubStrategy = require("passport-github2");
-const { userModel } = require("../manager/dao/models/users_model");
+const { userModel } = require("../manager/dao/mongo/models/users_model");
 const { createHash } = require("../utils/helpers/hasher");
 const { checkValidPassword } = require("../utils/helpers/pwd_validator");
 const { getUserInfo } = require("../utils/middleware/get_user_info");

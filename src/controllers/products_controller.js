@@ -1,4 +1,4 @@
-const productsManager = require("../manager/dao/mongo_product_manager");
+const productsManager = require("../manager/dao/mongo/mongo_product_manager");
 const { createBodyForProduct } = require("../utils/middleware/validations")
 
 
@@ -16,7 +16,7 @@ class ProductController {
                 hasNextPage,
                 nextPage,
                 totalPages,
-            } = await productsManager.getAllProducts(query, options);
+            } = await productsManager.getAll(query, options);
     
             if(!docs) {
                 return res.status(400).render("no_products_to_display");
@@ -42,7 +42,7 @@ class ProductController {
     getProductById = async (req, res) => {
         try {
             const { pid } = req.params;
-            const resp = await productsManager.getProductById(pid)
+            const resp = await productsManager.get(pid)
             if (resp !== null) { 
                 res.status(200).render("product_detail", {
                     username: req.session.user_info.username,
@@ -86,12 +86,13 @@ class ProductController {
 
     deleteProductById = async (req, res) => {
         const { pid } = req.params;
-        await productsManager.deleteProduct(pid).then((resp) => {
-            if (resp !== false) {
+        await productsManager.delete(pid).then((result) => {
+            if (result.deletedCount > 0) {
                 res.status(200).send({
                     "msg": `Se eliminó el producto con el ID ${pid}`,
-                    "product_data": resp
+                    // "product_data": resp
                 });
+                console.log("borrado");
             }
         });
     }

@@ -4,6 +4,7 @@ const { cartsRouter } = require("./carts_router");
 const { viewsRouter } = require("./views_router");
 const { sessionRouter } = require("./session_router");
 const { pruebasRouter } = require("./pruebas_router");
+const { ordersRouter } = require("./orders_router");
 
 // const { realTimeProductsRouter } = require("./routes/real_time_products")
 
@@ -12,6 +13,7 @@ const router = Router();
 
 router.use("/api/products", productsRouter);
 router.use("/api/carts", cartsRouter);
+router.use("/api/orders", ordersRouter);
 router.use("/chat", viewsRouter);
 router.use('/', sessionRouter);
 router.use("/pruebas", pruebasRouter);

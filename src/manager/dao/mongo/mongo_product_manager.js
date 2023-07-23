@@ -1,13 +1,13 @@
 const { productModel } = require("./models/products_model.js");
 
 class ProductManagerMongo {
-  getAllProducts = async (query, options) => {
+  getAll = async (query, options) => {
     const resp = await productModel.paginate(query, options);
     // console.log(resp);
     return resp;
   }
 
-  getProductById = async(pid) => {
+  get = async(pid) => {
     const resp = await productModel.findOne({_id: pid}).lean();
     console.log(resp);
     return resp;
@@ -30,8 +30,8 @@ class ProductManagerMongo {
     }})
   }
 
-  async deleteProduct(pid) {
-    return await productModel.deleteOne({pid})
+  async delete(pid) {
+    return await productModel.deleteOne({_id: pid})
   }
 
 

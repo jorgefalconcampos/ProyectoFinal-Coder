@@ -2,18 +2,15 @@ const { cartModel } = require("./models/carts_model.js");
 
 class CartManagerMongo {
 
-  async getCartById(cid) {
+  async get (cid) {
     return await cartModel.findOne({_id: cid}).lean();
   }
 
-  async addCart(newCart) {
+  async create(newCart) {
     return await cartModel.create(newCart);
   }
 
-  async updateCart(cid, CartToUpdate) {
-
-    console.log(cid);
-    console.log("\n\n\n");
+  async update(cid, CartToUpdate) {
 
     return await cartModel.updateOne({_id: cid}, {$set: {
       products: CartToUpdate.products
@@ -21,7 +18,7 @@ class CartManagerMongo {
   }
 
   // eliminar el carrito junto con todos sus productos
-  async deleteCart(cid) {
+  async delete(cid) {
     return await cartModel.deleteOne({_id: cid})
   }
 

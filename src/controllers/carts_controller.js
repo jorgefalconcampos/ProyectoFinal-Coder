@@ -1,4 +1,4 @@
-const cartsManager = require("../manager/dao/mongo_cart_manager");
+const cartsManager = require("../manager/dao/mongo/mongo_cart_manager");
 
 class CartController {
 
@@ -13,9 +13,11 @@ class CartController {
         return products;
     }
 
+
+    // TO DO: agregar validación para usuarios autenticados
     getCartById = async (req, res) => {
         const { cid } = req.params;
-        await cartsManager.getCartById(cid).then((resp) => {
+        await cartsManager.get(cid).then((resp) => {
             if (resp !== null) { 
                 let hasItems = false;
                 resp.products?.length > 0 ? hasItems = true : "";
@@ -38,7 +40,7 @@ class CartController {
     createCart = async (req, res) => {
         const data = req.body.products ? {products: req.body.products} : {products: []};
         // await carts.createRecord(data).then((resp) => {
-        await cartsManager.addCart(data).then((resp) => {
+        await cartsManager.create(data).then((resp) => {
             res.status(201).send({
                 "msg:": `Se creó el carrito con el ID ${resp.id}`
             });
@@ -48,11 +50,11 @@ class CartController {
     updateCartById = async(req, res) => {
         const { cid } = req.params;
         let hasItems = false;
-        const cart = await cartsManager.getCartById(cid);
+        const cart = await cartsManager.get(cid);
         if (cart !== null) { 
             cart.products?.length > 0 ? hasItems = true : "";
             if (hasItems) {
-                await cartsManager.updateCart(cid, req.body).then((resp) => {
+                await cartsManager.update(cid, req.body).then((resp) => {
                     if (resp !== false && resp.matchedCount > 0 && resp.modifiedCount > 0) {
                         res.status(200).send({ 
                             "msg": `Se actualizó el carrito con el ID ${cid}`,
@@ -69,12 +71,34 @@ class CartController {
 
     deleteCartById = async(req, res) => {
         const { cid } = req.params;
-        const result = await cartsManager.deleteCart(cid);
-        if (result.deletedCount > 0) {
-            res.status(200).send({ 
-                "msg": `Se eliminó el carrito con el ID ${cid}`,
+        const exists = await this.#cartExists(cid);
+
+        if (exists) {
+            const cart = await cartsManager.delete(cid);
+            if (cart.deletedCount > 0) {
+                res.status(200).send({ 
+                    "msg": `Se eliminó el carrito con el ID ${cid}`,
+                });
+            }
+        }
+        else {
+            res.status(404).send({ 
+                "msg": `No se encontró un carrito para eliminar con el ID ${cid}`
             });
         }
+    }
+
+
+
+     
+    
+
+
+    #cartExists = async(cid) => {
+        return await cartsManager.get(cid).then((resp) => {
+            if (resp !== null) { return resp; }
+            else { return false; }
+        }).catch((error) => console.log(`Error al validar existencia del carrito: \n${error}`));
     }
 
 

@@ -14,7 +14,7 @@ const objConfig = {
     adminName: process.env.ADMIN_NAME || "",
     adminPassword: process.env.ADMIN_PWD || "",
     jwtSigned: process.env.SECRET || "",
-
+    persistence: process.env.PERSISTENCE || "MONGO",
 
     connectDB: async ()=>{
         try {

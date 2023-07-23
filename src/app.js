@@ -8,7 +8,7 @@ const upload = multer();
 const { objConfig } = require("./config/config");
 const PORT = objConfig.port;
 
-const chatManager = require("./manager/dao/mongo_chat_manager.js");
+const chatManager = require("./manager/dao/mongo/mongo_chat_manager.js");
 
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -69,8 +69,8 @@ app.use((err, req, res, next) => {
     res.status(500).send("Ocurrió un error en el servidor.");
 });
 
-// te quedaste en el minuto 3:09 de la clase 14
-// https://coderhouse.zoom.us/rec/play/FGts6LmjiZhq1nhhQuACkJAllXbX6iT0JsW1mx7kFiR_7EZXzZViLz2QoyuRzNLCK70FrSSeEna9dvb6.GVuom1Ok4auP9gWo?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fcoderhouse.zoom.us%2Frec%2Fshare%2F3XPglmpR8WtJSmzUZ-Bsx4XCQKMpoeSl2RXYPmfa_o4S-2hCnWyC-IknL0O1VUej.gS-8uv-TZ2R06ij0
+// te quedaste en el minuto 2:29:05 de la clase 15
+// https://coderhouse.zoom.us/rec/play/1Ofg-gX5mCwYPjWMd9Xu5xt0ypJVQbE7CWC0tOoMHTfP-6VgJHFfvDwkyYI39VKqnV8UqhN1V3fL02zN.W2ZwY46v9mvxsxAy?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fcoderhouse.zoom.us%2Frec%2Fshare%2FXDI1JIDfHYvnSeYp1ncYWzIL7N6nIFjWAUVQSDa5rzVZvzFy2tykzXcpjzGJ3zFe.T8qk5xuHONPOZ5MP
 
 
 
@@ -88,9 +88,8 @@ const io = new Server(httpServer);
 initSocket(io);
 
 
-// te quedaste en 1:02:55
-// https://coderhouse.zoom.us/rec/play/FGts6LmjiZhq1nhhQuACkJAllXbX6iT0JsW1mx7kFiR_7EZXzZViLz2QoyuRzNLCK70FrSSeEna9dvb6.GVuom1Ok4auP9gWo?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fcoderhouse.zoom.us%2Frec%2Fshare%2F3XPglmpR8WtJSmzUZ-Bsx4XCQKMpoeSl2RXYPmfa_o4S-2hCnWyC-IknL0O1VUej.gS-8uv-TZ2R06ij0
-
+// te quedaste en el min. 2:50:13, clase 15
+// https://coderhouse.zoom.us/rec/play/1Ofg-gX5mCwYPjWMd9Xu5xt0ypJVQbE7CWC0tOoMHTfP-6VgJHFfvDwkyYI39VKqnV8UqhN1V3fL02zN.W2ZwY46v9mvxsxAy?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fcoderhouse.zoom.us%2Frec%2Fshare%2FXDI1JIDfHYvnSeYp1ncYWzIL7N6nIFjWAUVQSDa5rzVZvzFy2tykzXcpjzGJ3zFe.T8qk5xuHONPOZ5MP
 
 
 
