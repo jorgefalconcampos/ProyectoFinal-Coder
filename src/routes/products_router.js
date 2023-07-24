@@ -34,8 +34,11 @@ productsRouter.delete("/:pid", deleteProductById);
 
 productsRouter.param("pid", async (req, res, next, pid) => {
     if (req.method !== "GET") {
-        if (!validateId(pid)) { res.status(422).send({"msg": `El parámetro '${pid}' no es un ID válido`});}
-        else { next(); }
+        if (!validateId(pid)) { 
+            res.status(422).send({"msg": `El parámetro '${pid}' no es un ID válido`});
+            return;
+        }
+        else { next(); return; }
     }
     next();
 });

@@ -2,7 +2,14 @@ const cartsManager = require("../manager/dao/mongo/mongo_cart_manager");
 
 class CartController {
 
-    standarizeResponse = (resp) => {
+    #cartExists = async (cid) => {
+        return await cartsManager.get(cid).then((resp) => {
+            if (resp !== null) { return resp; }
+            else { return false; }
+        }).catch((error) => console.log(`Error al validar si existe el carrito: \n${error}`));
+    }
+
+    #standarizeResponse = (resp) => {
         const products = resp.products.map(({ _id, product: { __v, ...restProduct }, ...rest }) => ({
             ...rest,
             product: {
@@ -13,28 +20,26 @@ class CartController {
         return products;
     }
 
-
     // TO DO: agregar validación para usuarios autenticados
     getCartById = async (req, res) => {
         const { cid } = req.params;
-        await cartsManager.get(cid).then((resp) => {
-            if (resp !== null) { 
-                let hasItems = false;
-                resp.products?.length > 0 ? hasItems = true : "";
-                const productsInCart = this.standarizeResponse(resp);
-                res.status(200).render("cart_detail", {
-                    username: req.session.user_info.username,
-                    role: req.session.user_info.role,
-                    hasItems: hasItems,
-                    productsInCart: productsInCart,
-                    productsCount: productsInCart.length,
-                });
-            }
-            else { 
-                const not_found = true; const message = `No se encontró un carrito con el ID ${cid}`;
-                res.status(404).render("cart_not_found", {not_found, message});
-             }
-        }).catch((error) => console.log(`Error: \n${error}`));
+        const cart = await this.#cartExists(cid);
+        if (cart) {
+            let hasItems = false;
+            cart.products?.length > 0 ? hasItems = true : "";
+            const productsInCart = this.#standarizeResponse(cart);
+            res.status(200).render("cart_detail", {
+                username: req.session.user_info.username,
+                role: req.session.user_info.role,
+                hasItems: hasItems,
+                productsInCart: productsInCart,
+                productsCount: productsInCart.length,
+            });
+        }
+        else { 
+            const not_found = true; const message = `No se encontró un carrito con el ID ${cid}`;
+            res.status(404).render("cart_not_found", {not_found, message});
+         }
     }
 
     createCart = async (req, res) => {
@@ -50,8 +55,8 @@ class CartController {
     updateCartById = async(req, res) => {
         const { cid } = req.params;
         let hasItems = false;
-        const cart = await cartsManager.get(cid);
-        if (cart !== null) { 
+        const cart = await this.#cartExists(cid);
+        if (cart) {
             cart.products?.length > 0 ? hasItems = true : "";
             if (hasItems) {
                 await cartsManager.update(cid, req.body).then((resp) => {
@@ -71,12 +76,11 @@ class CartController {
 
     deleteCartById = async(req, res) => {
         const { cid } = req.params;
-        const exists = await this.#cartExists(cid);
-
-        if (exists) {
-            const cart = await cartsManager.delete(cid);
-            if (cart.deletedCount > 0) {
-                res.status(200).send({ 
+        const cart = await this.#cartExists(cid);
+        if (cart) {
+            const cartToDelete = await cartsManager.delete(cid);
+            if (cartToDelete.deletedCount > 0) {
+                res.status(200).send({
                     "msg": `Se eliminó el carrito con el ID ${cid}`,
                 });
             }
@@ -87,21 +91,7 @@ class CartController {
             });
         }
     }
-
-
-
-     
-    
-
-
-    #cartExists = async(cid) => {
-        return await cartsManager.get(cid).then((resp) => {
-            if (resp !== null) { return resp; }
-            else { return false; }
-        }).catch((error) => console.log(`Error al validar existencia del carrito: \n${error}`));
-    }
-
-
+  
 }
 
 module.exports = CartController;
